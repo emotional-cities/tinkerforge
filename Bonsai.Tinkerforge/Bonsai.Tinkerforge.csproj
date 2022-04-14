@@ -5,7 +5,7 @@
     <Title>Bonsai - Tinkerforge Library</Title>
     <Description>Bonsai Library containing interfaces for data acquisition and control using Tinkerforge devices.</Description>
     <Copyright>Copyright © NeuroGEARS Ltd 2022</Copyright>
-    <PackageProjectUrl>https://github.com/bonsai-rx/tinkerforge</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/emotional-cities/tinkerforge</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageIconUrl>https://bonsai-rx.org/assets/images/bonsai.png</PackageIconUrl>
     <IncludeSymbols Condition="'$(Configuration)'=='Release'">true</IncludeSymbols>
