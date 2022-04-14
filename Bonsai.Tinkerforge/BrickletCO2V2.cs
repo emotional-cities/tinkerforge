@@ -23,6 +23,9 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies a temperature offset, in hundredths of a degree, to compensate for heat inside an enclosure.")]
         public int TemperatureOffset { get; set; }
 
+        [Description("Specifies the behavior of the status LED.")]
+        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+
         public IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
@@ -30,6 +33,7 @@ namespace Bonsai.Tinkerforge
                 var device = new global::Tinkerforge.BrickletCO2V2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
+                    device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetAirPressure(AirPressure);
                     device.SetTemperatureOffset(TemperatureOffset);
                     device.SetAllValuesCallbackConfiguration(Period, false);
@@ -60,6 +64,14 @@ namespace Bonsai.Tinkerforge
                 Temperature = temperature;
                 Humidity = humidity;
             }
+        }
+
+        public enum StatusLedConfig : byte
+        {
+            Off = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_OFF,
+            On = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }
