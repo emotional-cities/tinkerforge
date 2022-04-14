@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Authors>NeuroGEARS</Authors>
+    <Title>Bonsai - Tinkerforge Library</Title>
+    <Description>Bonsai Library containing interfaces for data acquisition and control using Tinkerforge devices.</Description>
+    <Copyright>Copyright © NeuroGEARS Ltd 2022</Copyright>
+    <PackageProjectUrl>https://github.com/bonsai-rx/tinkerforge</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIconUrl>https://bonsai-rx.org/assets/images/bonsai.png</PackageIconUrl>
+    <IncludeSymbols Condition="'$(Configuration)'=='Release'">true</IncludeSymbols>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
+    <PackageTags>Bonsai Rx Tinkerforge</PackageTags>
+    <TargetFramework>net472</TargetFramework>
+    <Features>strict</Features>
+    <Version>0.1.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bonsai.Core" Version="2.6.0" />
+    <PackageReference Include="Tinkerforge" Version="2.1.30.1" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Content Include="..\LICENSE" PackagePath="/" />
+  </ItemGroup>
+
+</Project>
