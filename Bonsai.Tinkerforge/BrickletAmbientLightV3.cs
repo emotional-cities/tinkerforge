@@ -29,21 +29,21 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var ambientLight = new global::Tinkerforge.BrickletAmbientLightV3(Uid, connection);
+                var device = new global::Tinkerforge.BrickletAmbientLightV3(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
-                    ambientLight.SetStatusLEDConfig((byte)StatusLed);
-                    ambientLight.SetConfiguration((byte)IlluminanceRange, (byte)IntegrationTime);
-                    ambientLight.SetIlluminanceCallbackConfiguration(Period, false, 'x', 0, 1);
+                    device.SetStatusLEDConfig((byte)StatusLed);
+                    device.SetConfiguration((byte)IlluminanceRange, (byte)IntegrationTime);
+                    device.SetIlluminanceCallbackConfiguration(Period, false, 'x', 0, 1);
                 };
 
                 return Observable.FromEventPattern<global::Tinkerforge.BrickletAmbientLightV3.IlluminanceEventHandler, long>(
-                    handler => ambientLight.IlluminanceCallback += handler,
-                    handler => ambientLight.IlluminanceCallback -= handler)
+                    handler => device.IlluminanceCallback += handler,
+                    handler => device.IlluminanceCallback -= handler)
                     .Select(evt => evt.EventArgs)
                     .Finally(() =>
                     {
-                        try { ambientLight.SetIlluminanceCallbackConfiguration(0, false, 'x', 0, 1); }
+                        try { device.SetIlluminanceCallbackConfiguration(0, false, 'x', 0, 1); }
                         catch (NotConnectedException) { } // best effort
                     });
             });
