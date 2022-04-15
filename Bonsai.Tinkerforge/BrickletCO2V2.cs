@@ -47,7 +47,12 @@ namespace Bonsai.Tinkerforge
                     };
 
                     device.AllValuesCallback += handler;
-                    return Disposable.Create(() => device.AllValuesCallback -= handler);
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetAllValuesCallbackConfiguration(0, false); }
+                        catch (NotConnectedException) { } // best effort
+                        device.AllValuesCallback -= handler;
+                    });
                 });
             });
         }
