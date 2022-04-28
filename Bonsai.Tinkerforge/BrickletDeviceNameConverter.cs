@@ -72,12 +72,10 @@ namespace Bonsai.Tinkerforge
         private void EnumerateConnection(IPConnection sender, string uid, string connectedUid, char position,
             short[] hardwareVersion, short[] firmwareVersion, int deviceIdentifier, short enumerationType)
         {
-            devices.Add(new DeviceData { UID = uid, 
-                                         ConnectedUID = connectedUid, 
-                                         Position = position, 
-                                         DeviceIdentifier = deviceIdentifier });
+            DeviceData discoveredDevice = new DeviceData(uid, connectedUid, position, deviceIdentifier);
+            devices.Add(discoveredDevice);
 
-            Console.WriteLine(deviceIdentifier);
+            Console.WriteLine(discoveredDevice.DeviceIdentifier);
         }
 
         // TODO - move this to its own file if it needs to be reused across modules
@@ -100,7 +98,15 @@ namespace Bonsai.Tinkerforge
             public string UID; // Unique module ID
             public string ConnectedUID; // IDs of connected modules
             public char Position; // Position in the network
-            public int DeviceIdentifier; // Number corresponding to device name
+            public string DeviceIdentifier; // Number corresponding to device name
+
+            public DeviceData(string uid, string connectedUid, char position, int deviceIdentifier)
+            {
+                UID = uid;
+                ConnectedUID = connectedUid;
+                Position = position;
+                DeviceIdentifier = TinkerforgeHelpers.TinkerForgeNameLookup.Defaults[deviceIdentifier];
+            }
         }
 
         // Goncalo's method of doing the above, also works and probably more scaleable for more complex workflows
