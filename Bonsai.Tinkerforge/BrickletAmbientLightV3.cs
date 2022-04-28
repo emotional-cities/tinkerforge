@@ -25,6 +25,10 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
 
+        [Description("Test property for dynamic selection of UIDs")]
+        [TypeConverter(typeof(BrickletDeviceNameConverter))]
+        public string AvailableConnections { get; set; }
+
         public override IObservable<long> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
