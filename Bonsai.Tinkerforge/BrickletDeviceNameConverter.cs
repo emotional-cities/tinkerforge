@@ -11,7 +11,7 @@ namespace Bonsai.Tinkerforge
 {
     internal class BrickletDeviceNameConverter : TypeConverter
     {
-        public List<string> devices;
+        public List<DeviceData> devices;
         //private Stopwatch stopwatch;
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
@@ -44,7 +44,7 @@ namespace Bonsai.Tinkerforge
                                          .Distinct().ToList();
 
                     // For each IP connection, we search the connected devices and add it to the list - TODO test for multiple IP
-                    devices = new List<string>();
+                    devices = new List<DeviceData>();
                     foreach (ConnectionID connectionID in connectionIDs)
                     {
                         var ipcon = new IPConnection();
@@ -60,7 +60,7 @@ namespace Bonsai.Tinkerforge
                         ipcon.Disconnect();
                     }
                 }
-                return new StandardValuesCollection(devices);
+                return new StandardValuesCollection(devices.Select(x => x.UID).ToList());
             }
 
             return base.GetStandardValues(context);
@@ -72,7 +72,12 @@ namespace Bonsai.Tinkerforge
         private void EnumerateConnection(IPConnection sender, string uid, string connectedUid, char position,
             short[] hardwareVersion, short[] firmwareVersion, int deviceIdentifier, short enumerationType)
         {
-            devices.Add(uid);
+            devices.Add(new DeviceData { UID = uid, 
+                                         ConnectedUID = connectedUid, 
+                                         Position = position, 
+                                         DeviceIdentifier = deviceIdentifier });
+
+            Console.WriteLine(deviceIdentifier);
         }
 
         // TODO - move this to its own file if it needs to be reused across modules
@@ -85,6 +90,17 @@ namespace Bonsai.Tinkerforge
             {
                 return $"{HostName}:{Port}";
             }
+        }
+
+        /// <summary>
+        /// Data representation of a connected TinkerForge module
+        /// </summary>
+        public class DeviceData
+        {
+            public string UID; // Unique module ID
+            public string ConnectedUID; // IDs of connected modules
+            public char Position; // Position in the network
+            public int DeviceIdentifier; // Number corresponding to device name
         }
 
         // Goncalo's method of doing the above, also works and probably more scaleable for more complex workflows
