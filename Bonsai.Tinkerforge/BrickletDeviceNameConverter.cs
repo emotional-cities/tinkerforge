@@ -11,7 +11,7 @@ namespace Bonsai.Tinkerforge
 {
     internal class BrickletDeviceNameConverter : TypeConverter
     {
-        public List<DeviceData> devices;
+        public List<TinkerforgeHelpers.DeviceData> devices;
         //private Stopwatch stopwatch;
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
@@ -44,7 +44,7 @@ namespace Bonsai.Tinkerforge
                                          .Distinct().ToList();
 
                     // For each IP connection, we search the connected devices and add it to the list - TODO test for multiple IP
-                    devices = new List<DeviceData>();
+                    devices = new List<TinkerforgeHelpers.DeviceData>();
                     foreach (ConnectionID connectionID in connectionIDs)
                     {
                         var ipcon = new IPConnection();
@@ -72,7 +72,7 @@ namespace Bonsai.Tinkerforge
         private void EnumerateConnection(IPConnection sender, string uid, string connectedUid, char position,
             short[] hardwareVersion, short[] firmwareVersion, int deviceIdentifier, short enumerationType)
         {
-            DeviceData discoveredDevice = new DeviceData(uid, connectedUid, position, deviceIdentifier);
+            TinkerforgeHelpers.DeviceData discoveredDevice = new TinkerforgeHelpers.DeviceData(uid, connectedUid, position, deviceIdentifier);
             devices.Add(discoveredDevice);
 
             Console.WriteLine(discoveredDevice.DeviceIdentifier);
@@ -87,25 +87,6 @@ namespace Bonsai.Tinkerforge
             public override string ToString()
             {
                 return $"{HostName}:{Port}";
-            }
-        }
-
-        /// <summary>
-        /// Data representation of a connected TinkerForge module
-        /// </summary>
-        public class DeviceData
-        {
-            public string UID; // Unique module ID
-            public string ConnectedUID; // IDs of connected modules
-            public char Position; // Position in the network
-            public string DeviceIdentifier; // Number corresponding to device name
-
-            public DeviceData(string uid, string connectedUid, char position, int deviceIdentifier)
-            {
-                UID = uid;
-                ConnectedUID = connectedUid;
-                Position = position;
-                DeviceIdentifier = TinkerforgeHelpers.TinkerForgeNameLookup.Defaults[deviceIdentifier];
             }
         }
 
