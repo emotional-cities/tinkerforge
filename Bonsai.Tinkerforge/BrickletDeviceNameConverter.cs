@@ -6,12 +6,13 @@ using Bonsai.Expressions;
 using Tinkerforge;
 using System.Threading;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Bonsai.Tinkerforge
 {
     internal class BrickletDeviceNameConverter : TypeConverter
     {
-        public List<TinkerforgeHelpers.DeviceData> devices;
+        public Dictionary<string, TinkerforgeHelpers.DeviceData> devices;
         //private Stopwatch stopwatch;
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
@@ -22,6 +23,27 @@ namespace Bonsai.Tinkerforge
         public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             return true;
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            var casted = value as string;
+            return casted != null
+                ? devices[casted]
+                : base.ConvertFrom(context, culture, value);
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            var casted = value as TinkerforgeHelpers.DeviceData;
+            return destinationType == typeof(string) && casted != null
+                ? casted.ToString()
+                : base.ConvertTo(context, culture, value, destinationType);
         }
 
         /// <summary>
@@ -44,7 +66,7 @@ namespace Bonsai.Tinkerforge
                                          .Distinct().ToList();
 
                     // For each IP connection, we search the connected devices and add it to the list - TODO test for multiple IP
-                    devices = new List<TinkerforgeHelpers.DeviceData>();
+                    devices = new Dictionary<string, TinkerforgeHelpers.DeviceData>();
                     foreach (ConnectionID connectionID in connectionIDs)
                     {
                         var ipcon = new IPConnection();
@@ -60,7 +82,8 @@ namespace Bonsai.Tinkerforge
                         ipcon.Disconnect();
                     }
                 }
-                return new StandardValuesCollection(devices.Select(x => x.UID).ToList());
+                //return new StandardValuesCollection(devices.Select(x => x.DeviceIdentifier).ToList());
+                return new StandardValuesCollection(devices.Values.ToList());
             }
 
             return base.GetStandardValues(context);
@@ -73,9 +96,7 @@ namespace Bonsai.Tinkerforge
             short[] hardwareVersion, short[] firmwareVersion, int deviceIdentifier, short enumerationType)
         {
             TinkerforgeHelpers.DeviceData discoveredDevice = new TinkerforgeHelpers.DeviceData(uid, connectedUid, position, deviceIdentifier);
-            devices.Add(discoveredDevice);
-
-            Console.WriteLine(discoveredDevice.DeviceIdentifier);
+            devices.Add(discoveredDevice.ToString(), discoveredDevice);
         }
 
         // TODO - move this to its own file if it needs to be reused across modules
