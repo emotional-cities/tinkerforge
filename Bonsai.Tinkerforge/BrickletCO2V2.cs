@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
+using System.Xml.Serialization;
 
 namespace Bonsai.Tinkerforge
 {
@@ -11,6 +12,10 @@ namespace Bonsai.Tinkerforge
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
     public class BrickletCO2V2
     {
+        [Description("Device data including address UID.")]
+        [TypeConverter(typeof(BrickletDeviceNameConverter))]
+        public TinkerforgeHelpers.DeviceData Device { get; set; }
+
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
 
@@ -20,12 +25,9 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies a temperature offset, in hundredths of a degree, to compensate for heat inside an enclosure.")]
         public int TemperatureOffset { get; set; }
 
+        [XmlIgnore]
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
-
-        [Description("Device data including address UID.")]
-        [TypeConverter(typeof(BrickletDeviceNameConverter))]
-        public TinkerforgeHelpers.DeviceData Device { get; set; }
 
         public IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {

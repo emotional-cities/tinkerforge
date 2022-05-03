@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using Tinkerforge;
-using System.Xml;
+using System.Xml.Serialization;
 
 namespace Bonsai.Tinkerforge
 {
@@ -11,6 +11,10 @@ namespace Bonsai.Tinkerforge
     [Description("Measures ambient illuminance from an Ambient Light Bricklet 3.0.")]
     public class BrickletAmbientLightV3 : Combinator<IPConnection, long>
     {
+        [Description("Device data including address UID.")]
+        [TypeConverter(typeof(BrickletDeviceNameConverter))]
+        public TinkerforgeHelpers.DeviceData Device { get; set; }
+
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
 
@@ -20,12 +24,9 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the integration time window used for ambient light measurements.")]
         public IntegrationTimeConfig IntegrationTime { get; set; }
 
+        [XmlIgnore]
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
-
-        [Description("Device data including address UID.")]
-        [TypeConverter(typeof(BrickletDeviceNameConverter))]
-        public TinkerforgeHelpers.DeviceData Device { get; set; }
 
         public override IObservable<long> Process(IObservable<IPConnection> source)
         {
