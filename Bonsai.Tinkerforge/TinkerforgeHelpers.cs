@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Bonsai.Tinkerforge
 {
@@ -25,13 +28,17 @@ namespace Bonsai.Tinkerforge
         /// <summary>
         /// Data representation of a connected TinkerForge module
         /// </summary>
-        [Serializable]
         public class DeviceData
         {
             public string UID; // Unique module ID
             public string ConnectedUID; // IDs of connected modules
             public char Position; // Position in the network
             public int DeviceIdentifier; // Number corresponding to device name
+
+            public DeviceData()
+            {
+
+            }
 
             public DeviceData(string uid, string connectedUid, char position, int deviceIdentifier)
             {

@@ -3,16 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using Tinkerforge;
+using System.Xml;
 
 namespace Bonsai.Tinkerforge
 {
-    [DefaultProperty(nameof(Uid))]
+    [DefaultProperty(nameof(Device))]
     [Description("Measures ambient illuminance from an Ambient Light Bricklet 3.0.")]
     public class BrickletAmbientLightV3 : Combinator<IPConnection, long>
     {
-        [Description("The unique bricklet device UID.")]
-        public string Uid { get; set; }
-
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
 
@@ -27,13 +25,13 @@ namespace Bonsai.Tinkerforge
 
         [Description("Test property for dynamic selection of UIDs")]
         [TypeConverter(typeof(BrickletDeviceNameConverter))]
-        public TinkerforgeHelpers.DeviceData AvailableConnections { get; set; }
+        public TinkerforgeHelpers.DeviceData Device { get; set; }
 
         public override IObservable<long> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletAmbientLightV3(Uid, connection);
+                var device = new global::Tinkerforge.BrickletAmbientLightV3(Device.UID, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
