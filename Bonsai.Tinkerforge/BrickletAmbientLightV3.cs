@@ -27,7 +27,7 @@ namespace Bonsai.Tinkerforge
 
         [Description("Test property for dynamic selection of UIDs")]
         [TypeConverter(typeof(BrickletDeviceNameConverter))]
-        public string AvailableConnections { get; set; }
+        public TinkerforgeHelpers.DeviceData AvailableConnections { get; set; }
 
         public override IObservable<long> Process(IObservable<IPConnection> source)
         {
