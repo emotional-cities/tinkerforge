@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace Bonsai.Tinkerforge
 {
     public class TinkerforgeHelpers
     {
-        public static class TinkerForgeNameLookup
+        /// <summary>
+        /// Tinkerforge modules have a standard int->Name lookup
+        /// </summary>
+        public static class TinkerForgeDeviceLookup
         {
             public static Dictionary<int, string> Defaults = new Dictionary<int, string>
             {
@@ -26,14 +33,25 @@ namespace Bonsai.Tinkerforge
             public string UID; // Unique module ID
             public string ConnectedUID; // IDs of connected modules
             public char Position; // Position in the network
-            public string DeviceIdentifier; // Number corresponding to device name
+            public int DeviceIdentifier; // Number corresponding to device name
+
+            // Parameterless constructor required for serialization
+            public DeviceData()
+            {
+
+            }
 
             public DeviceData(string uid, string connectedUid, char position, int deviceIdentifier)
             {
                 UID = uid;
                 ConnectedUID = connectedUid;
                 Position = position;
-                DeviceIdentifier = TinkerforgeHelpers.TinkerForgeNameLookup.Defaults[deviceIdentifier];
+                DeviceIdentifier = deviceIdentifier;
+            }
+
+            public override string ToString()
+            {
+                return $"{TinkerForgeDeviceLookup.Defaults[DeviceIdentifier]}:{UID}:{Position}:{ConnectedUID}";
             }
         }
     }
