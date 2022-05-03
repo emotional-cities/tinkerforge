@@ -25,9 +25,8 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies a temperature offset, in hundredths of a degree, to compensate for heat inside an enclosure.")]
         public int TemperatureOffset { get; set; }
 
-        [XmlIgnore]
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public CO2V2StatusLedConfig StatusLed { get; set; } = CO2V2StatusLedConfig.ShowStatus;
 
         public IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
@@ -74,7 +73,7 @@ namespace Bonsai.Tinkerforge
             }
         }
 
-        public enum StatusLedConfig : byte
+        public enum CO2V2StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_ON,
