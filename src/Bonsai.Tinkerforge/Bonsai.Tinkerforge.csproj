@@ -19,6 +19,7 @@
     <TargetFramework>net472</TargetFramework>
     <Features>strict</Features>
     <Version>0.1.0</Version>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
