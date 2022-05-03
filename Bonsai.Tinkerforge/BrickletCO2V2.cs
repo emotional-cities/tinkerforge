@@ -7,13 +7,10 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [Combinator]
-    [DefaultProperty(nameof(Uid))]
+    [DefaultProperty(nameof(Device))]
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
     public class BrickletCO2V2
     {
-        [Description("The unique bricklet device UID.")]
-        public string Uid { get; set; }
-
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
 
@@ -26,11 +23,15 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
 
+        [Description("Device data including address UID.")]
+        [TypeConverter(typeof(BrickletDeviceNameConverter))]
+        public TinkerforgeHelpers.DeviceData Device { get; set; }
+
         public IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletCO2V2(Uid, connection);
+                var device = new global::Tinkerforge.BrickletCO2V2(Device.UID, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);

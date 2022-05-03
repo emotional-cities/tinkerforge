@@ -23,7 +23,7 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
 
-        [Description("Test property for dynamic selection of UIDs")]
+        [Description("Device data including address UID.")]
         [TypeConverter(typeof(BrickletDeviceNameConverter))]
         public TinkerforgeHelpers.DeviceData Device { get; set; }
 
