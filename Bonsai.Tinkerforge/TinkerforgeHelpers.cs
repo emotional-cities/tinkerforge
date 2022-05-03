@@ -35,6 +35,7 @@ namespace Bonsai.Tinkerforge
             public char Position; // Position in the network
             public int DeviceIdentifier; // Number corresponding to device name
 
+            // Parameterless constructor required for serialization
             public DeviceData()
             {
 
