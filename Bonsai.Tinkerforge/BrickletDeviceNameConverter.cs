@@ -30,6 +30,10 @@ namespace Bonsai.Tinkerforge
             return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
+        // If we are doing the type conversion in a drop down, we are converting between a data object (DeviceData) and 
+        // a representative string in the drop down. We need to define the to/from conversion so that we can have a human
+        // readable representation of the device in the drop down, and use that string to look up the correct
+        // DeviceData on selection in the editor
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
             var casted = value as string;
@@ -71,7 +75,7 @@ namespace Bonsai.Tinkerforge
                     {
                         var ipcon = new IPConnection();
                         ipcon.EnumerateCallback += EnumerateConnection;
-                        ipcon.Connect(connectionID.HostName, connectionID.Port);
+                        ipcon.Connect(connectionID.HostName, connectionID.Port); 
                         ipcon.Enumerate();
                         /// N.B. GetStandardValues is called twice by Windows Forms. Once to check the dropdown list and then again
                         /// to check cursor position in the list. This is annoying here because it means the enumerate thread will
