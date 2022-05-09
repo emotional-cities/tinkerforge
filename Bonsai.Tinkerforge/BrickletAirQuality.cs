@@ -6,10 +6,9 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [Combinator]
     [DefaultProperty(nameof(Uid))]
     [Description("Measure IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet")]
-    public class BrickletAirQuality
+    public class BrickletAirQuality : Combinator<IPConnection, BrickletAirQuality.DataFrame>
     {
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
@@ -26,7 +25,7 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
 
-        public IObservable<DataFrame> Process(IObservable<IPConnection> source)
+        public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
