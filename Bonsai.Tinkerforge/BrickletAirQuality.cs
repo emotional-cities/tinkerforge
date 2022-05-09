@@ -58,7 +58,7 @@ namespace Bonsai.Tinkerforge
 
         public struct DataFrame
         {
-            public int IaqIndex;
+            public int IaqIndex; 
             public byte IaqIndexAccuracy;
             public int Temperature;
             public int Humidity;
