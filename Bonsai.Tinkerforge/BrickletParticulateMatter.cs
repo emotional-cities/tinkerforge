@@ -65,10 +65,10 @@ namespace Bonsai.Tinkerforge
 
         public enum StatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_OFF,
+            On = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }
