@@ -6,10 +6,9 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [Combinator]
     [DefaultProperty(nameof(Uid))]
     [Description("Measures sound pressure and specture from a Sound Pressure Level Bricklet")]
-    public class BrickletSoundPressure
+    public class BrickletSoundPressure : Combinator<IPConnection, int>
     {
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
@@ -26,7 +25,7 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
 
-        public IObservable<int> Process(IObservable<IPConnection> source)
+        public override IObservable<int> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
