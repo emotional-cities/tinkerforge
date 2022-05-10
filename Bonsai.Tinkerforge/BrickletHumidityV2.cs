@@ -29,7 +29,7 @@ namespace Bonsai.Tinkerforge
         public int MovingAverageLengthHumidity { get; set; } = 5;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletHumidityStatusLedConfig StatusLed { get; set; } = BrickletHumidityStatusLedConfig.ShowStatus;
 
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
@@ -68,7 +68,7 @@ namespace Bonsai.Tinkerforge
             Enabled = global::Tinkerforge.BrickletHumidityV2.HEATER_CONFIG_ENABLED
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletHumidityStatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_ON,

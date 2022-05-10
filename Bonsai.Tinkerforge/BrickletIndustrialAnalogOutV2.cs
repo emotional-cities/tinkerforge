@@ -29,7 +29,7 @@ namespace Bonsai.Tinkerforge
         public int OutLedStatusMax { get; set; } = 24000;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletIndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = BrickletIndustrialAnalogOutV2StatusLedConfig.ShowStatus;
 
         public IObservable<int> Generate(IObservable<IPConnection> source, IObservable<int> signal)
         {
@@ -79,7 +79,7 @@ namespace Bonsai.Tinkerforge
             ShowOutStatus = global::Tinkerforge.BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_SHOW_OUT_STATUS
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletIndustrialAnalogOutV2StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_ON,

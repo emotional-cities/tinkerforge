@@ -23,7 +23,7 @@ namespace Bonsai.Tinkerforge
         public WeightingFunction Weighting { get; set; } = WeightingFunction.WeightingITU;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletSoundPressureStatusLedConfig StatusLed { get; set; } = BrickletSoundPressureStatusLedConfig.ShowStatus;
 
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
@@ -73,7 +73,7 @@ namespace Bonsai.Tinkerforge
             WeightingITU = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_ITU_R_468
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletSoundPressureStatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletSoundPressureLevel.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletSoundPressureLevel.STATUS_LED_CONFIG_ON,

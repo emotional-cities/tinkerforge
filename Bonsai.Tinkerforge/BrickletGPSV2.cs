@@ -19,7 +19,7 @@ namespace Bonsai.Tinkerforge
         public SBASConfig SBAS { get; set; } = SBASConfig.Disabled;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
         // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus
         public override IObservable<CoordinateData> Process(IObservable<IPConnection> source)
@@ -74,7 +74,7 @@ namespace Bonsai.Tinkerforge
             Disabled = global::Tinkerforge.BrickletGPSV2.SBAS_DISABLED,
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletGPSV2StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_ON,
