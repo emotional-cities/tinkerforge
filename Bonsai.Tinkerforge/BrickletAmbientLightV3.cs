@@ -24,7 +24,7 @@ namespace Bonsai.Tinkerforge
         public IntegrationTimeConfig IntegrationTime { get; set; }
 
         [Description("Specifies the behavior of the status LED.")]
-        public AmbientLightV3StatusLedConfig StatusLed { get; set; } = AmbientLightV3StatusLedConfig.ShowStatus;
+        public BrickletAmbientLightV3StatusLedConfig StatusLed { get; set; } = BrickletAmbientLightV3StatusLedConfig.ShowStatus;
 
         public override IObservable<long> Process(IObservable<IPConnection> source)
         {
@@ -73,7 +73,7 @@ namespace Bonsai.Tinkerforge
             Integration400ms = global::Tinkerforge.BrickletAmbientLightV3.INTEGRATION_TIME_400MS,
         }
 
-        public enum AmbientLightV3StatusLedConfig : byte
+        public enum BrickletAmbientLightV3StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletAmbientLightV3.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletAmbientLightV3.STATUS_LED_CONFIG_ON,

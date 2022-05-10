@@ -23,7 +23,7 @@ namespace Bonsai.Tinkerforge
         public BackgroundCalibrationDurationConfig BackgroundCalibrationDuration { get; set; } = BackgroundCalibrationDurationConfig.Days4;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletAirQualityStatusLedConfig StatusLed { get; set; } = BrickletAirQualityStatusLedConfig.ShowStatus;
 
         public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
@@ -79,7 +79,7 @@ namespace Bonsai.Tinkerforge
             Days28 = global::Tinkerforge.BrickletAirQuality.DURATION_28_DAYS
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletAirQualityStatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletAirQuality.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletAirQuality.STATUS_LED_CONFIG_ON,

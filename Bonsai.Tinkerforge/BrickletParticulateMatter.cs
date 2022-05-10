@@ -17,7 +17,7 @@ namespace Bonsai.Tinkerforge
         public long Period { get; set; } = 1000;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletParticulateMatterStatusLedConfig StatusLed { get; set; } = BrickletParticulateMatterStatusLedConfig.ShowStatus;
 
         public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
@@ -62,7 +62,7 @@ namespace Bonsai.Tinkerforge
             }
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletParticulateMatterStatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_ON,

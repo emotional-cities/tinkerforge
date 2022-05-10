@@ -28,7 +28,7 @@ namespace Bonsai.Tinkerforge
         public WireModeConfig WireMode { get; set; } = WireModeConfig.WireMode2;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletIndustrialPTCStatusLedConfig StatusLed { get; set; } = BrickletIndustrialPTCStatusLedConfig.ShowStatus;
 
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
@@ -68,7 +68,7 @@ namespace Bonsai.Tinkerforge
             WireMode4 = global::Tinkerforge.BrickletIndustrialPTC.WIRE_MODE_4,
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletIndustrialPTCStatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletIndustrialPTC.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletIndustrialPTC.STATUS_LED_CONFIG_ON,

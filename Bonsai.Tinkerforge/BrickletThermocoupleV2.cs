@@ -26,7 +26,7 @@ namespace Bonsai.Tinkerforge
         public FilterOption Filter { get; set; } = FilterOption.Filter50Hz;
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public BrickletThermocoupleV2StatusLedConfig StatusLed { get; set; } = BrickletThermocoupleV2StatusLedConfig.ShowStatus;
 
         public IObservable<int> Process(IObservable<IPConnection> source)
         {
@@ -81,7 +81,7 @@ namespace Bonsai.Tinkerforge
             Filter60Hz = global::Tinkerforge.BrickletThermocoupleV2.FILTER_OPTION_60HZ
         }
 
-        public enum StatusLedConfig : byte
+        public enum BrickletThermocoupleV2StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletThermocoupleV2.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletThermocoupleV2.STATUS_LED_CONFIG_ON,
