@@ -43,8 +43,13 @@ namespace Bonsai.Tinkerforge
                     device.SetOutLEDStatusConfig(OutLedStatusMin, OutLedStatusMax, (byte)OutLedStatus);
                 };
 
+                return signal.Do(value =>
+                {
+                    device.SetVoltage(value);
+                });
+
                 // Set voltage when input is in range
-                return signal.Where(value => value > 0 && value < 10000).Do(value => { device.SetVoltage(value); });
+                //return signal.Where(value => value > 0 && value < 10000).Do(value => { device.SetVoltage(value); });
             });
         }
 
