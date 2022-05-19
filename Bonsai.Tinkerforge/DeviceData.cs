@@ -31,7 +31,7 @@ namespace Bonsai.Tinkerforge
 
         public override string ToString()
         {
-            return $"{TinkerforgeDeviceLookup.Defaults[DeviceIdentifier]}:{Uid}:{Position}:{ConnectedUid}";
+            return $"{TinkerforgeDeviceLookup.Defaults[DeviceIdentifier]}:{Uid}";
         }
     }
 

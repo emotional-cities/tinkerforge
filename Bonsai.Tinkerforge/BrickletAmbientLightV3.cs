@@ -11,8 +11,8 @@ namespace Bonsai.Tinkerforge
     public class BrickletAmbientLightV3 : Combinator<IPConnection, long>
     {
         [Description("Device data including address UID.")]
-        [TypeConverter(typeof(BrickletDeviceNameConverter))]
-        public DeviceData Device { get; set; }
+        [TypeConverter(typeof(UidConverter))]
+        public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
@@ -30,7 +30,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletAmbientLightV3(Device.Uid, connection);
+                var device = new global::Tinkerforge.BrickletAmbientLightV3(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
