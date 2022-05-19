@@ -2,25 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
-using Bonsai.Expressions;
-using Tinkerforge;
-using System.Threading;
-using System.Diagnostics;
 using System.Globalization;
+using Bonsai.Expressions;
+using System.Threading;
+using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    internal class BrickletDeviceNameConverter : TypeConverter
+    internal class UidConverter : StringConverter
     {
-        public Dictionary<string, TinkerforgeHelpers.DeviceData> devices;
-        //private Stopwatch stopwatch;
+        // Cache for discovered Brick / Bricklet devices
+        public Dictionary<string, DeviceData> devices;
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
-        {
-            return true;
-        }
-
-        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
         {
             return true;
         }
@@ -30,27 +24,34 @@ namespace Bonsai.Tinkerforge
             return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
         }
 
+        // From display string --> Uid string
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            var casted = value as string;
-            return casted != null
-                ? devices[casted]
+            var text = value as string;
+            return text != null
+                ? text.Split(':')[1]
                 : base.ConvertFrom(context, culture, value);
         }
 
+        // From Uid string --> display string
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            var casted = value as TinkerforgeHelpers.DeviceData;
-            return destinationType == typeof(string) && casted != null
-                ? casted.ToString()
+            if (devices == null) LookupDevices(context);
+            var text = value as string;
+            return destinationType == typeof(string) && text != null
+                ? devices[text].ToString()
                 : base.ConvertTo(context, culture, value, destinationType);
         }
 
-        /// <summary>
-        /// For Bricklets, we have to specify a UID to connect to. To get that, we need to know what IP connections are present,
-        /// and what UIDs are present on those connections
-        /// </summary>
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+        {
+            // Get the currently available device names
+            return LookupDevices(context);
+        }
+
+        // For Bricklets, we have to specify a UID to connect to. To get that, we need to know what IP connections are present,
+        // and what UIDs are present on those connections
+        private StandardValuesCollection LookupDevices(ITypeDescriptorContext context)
         {
             if (context != null)
             {
@@ -63,10 +64,10 @@ namespace Bonsai.Tinkerforge
                                          let createIP = ExpressionBuilder.GetWorkflowElement(builder) as CreateIPConnection
                                          where createIP != null
                                          select new ConnectionID { HostName = createIP.HostName, Port = createIP.Port })
-                                         .Distinct().ToList();
+                                            .Distinct().ToList();
 
                     // For each IP connection, we search the connected devices and add it to the list - TODO test for multiple IP
-                    devices = new Dictionary<string, TinkerforgeHelpers.DeviceData>();
+                    devices = new Dictionary<string, DeviceData>();
                     foreach (ConnectionID connectionID in connectionIDs)
                     {
                         var ipcon = new IPConnection();
@@ -82,24 +83,20 @@ namespace Bonsai.Tinkerforge
                         ipcon.Disconnect();
                     }
                 }
-                //return new StandardValuesCollection(devices.Select(x => x.DeviceIdentifier).ToList());
                 return new StandardValuesCollection(devices.Values.ToList());
             }
 
             return base.GetStandardValues(context);
         }
 
-        /// <summary>
-        /// EnumerateCallback used to add devices to the device list when IPConnection.Enumerate() is called
-        /// </summary>
+        // Callback for IPConnection.Enumerate() that adds devices to the device list
         private void EnumerateConnection(IPConnection sender, string uid, string connectedUid, char position,
             short[] hardwareVersion, short[] firmwareVersion, int deviceIdentifier, short enumerationType)
         {
-            TinkerforgeHelpers.DeviceData discoveredDevice = new TinkerforgeHelpers.DeviceData(uid, connectedUid, position, deviceIdentifier);
-            devices.Add(discoveredDevice.ToString(), discoveredDevice);
+            DeviceData discoveredDevice = new DeviceData(uid, connectedUid, position, deviceIdentifier);
+            devices.Add(discoveredDevice.Uid, discoveredDevice);
         }
 
-        // TODO - move this to its own file if it needs to be reused across modules
         public struct ConnectionID
         {
             public string HostName;
@@ -110,45 +107,5 @@ namespace Bonsai.Tinkerforge
                 return $"{HostName}:{Port}";
             }
         }
-
-        // Goncalo's method of doing the above, also works and probably more scaleable for more complex workflows
-        //public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
-        //{
-        //    // TODO - some of these need to go into a helper class for dealing with grabbing connected stuff
-        //    // Here we grab all the existing Tinkerforge IPConnection nodes as output. TODO - should give the associated UIDs for those connections
-        //    if (context != null)
-        //    {
-        //        if (stopwatch == null || stopwatch.ElapsedMilliseconds > 1000)
-        //        {
-        //            var workflowBuilder = (WorkflowBuilder)context.GetService(typeof(WorkflowBuilder));
-        //            if (workflowBuilder != null)
-        //            {
-        //                stopwatch = Stopwatch.StartNew();
-        //                Console.WriteLine("request");
-        //                // Get the distinct connection specs (host / port)
-        //                var connectionIDs = (from builder in workflowBuilder.Workflow.Descendants()
-        //                                     let createIP = ExpressionBuilder.GetWorkflowElement(builder) as CreateIPConnection
-        //                                     where createIP != null
-        //                                     select new ConnectionID { HostName = createIP.HostName, Port = createIP.Port })
-        //                                 .Distinct().ToList();
-
-        //                // Test uid
-        //                devices = new List<string>();
-        //                var ipcon = new IPConnection();
-        //                ipcon.Connect("localhost", 4223);
-
-        //                ipcon.EnumerateCallback += EnumerateConnection;
-        //                ipcon.Enumerate();
-        //                Thread.Sleep(100);
-
-        //                ipcon.Disconnect();
-        //            }
-        //        }
-
-        //        return new StandardValuesCollection(devices);
-        //    }
-
-        //    return base.GetStandardValues(context);
-        //}
     }
 }
