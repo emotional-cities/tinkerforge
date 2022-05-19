@@ -21,7 +21,7 @@ namespace Bonsai.Tinkerforge
         public int MovingAverageLengthTemperature { get; set; } = 1;
 
         [Range(1, 1000)]
-        [Description("Specifies the moving average window length for resitance. A value of 1 turns off averaging.")]
+        [Description("Specifies the moving average window length for resistance. A value of 1 turns off averaging.")]
         public int MovingAverageLengthResistance { get; set; } = 1;
 
         [Description("Specifies the wire mode of the sensor.")]

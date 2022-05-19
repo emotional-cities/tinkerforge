@@ -7,7 +7,7 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
-    [Description("Measure IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet")]
+    [Description("Measure IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet.")]
     public class BrickletAirQuality : Combinator<IPConnection, BrickletAirQuality.DataFrame>
     {
         [Description("The unique bricklet device UID.")]
@@ -19,7 +19,7 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies a temperature offset, in hundredths of a degree, to compensate for heat inside an enclosure.")]
         public int TemperatureOffset { get; set; }
 
-        [Description("Specifies the duration of background calibration (requires power cycle to change)")]
+        [Description("Specifies the duration of background calibration (requires power cycle to change).")]
         public BackgroundCalibrationDurationConfig BackgroundCalibrationDuration { get; set; } = BackgroundCalibrationDurationConfig.Days4;
 
         [Description("Specifies the behavior of the status LED.")]

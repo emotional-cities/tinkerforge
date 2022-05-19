@@ -4,9 +4,10 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
-
 namespace Bonsai.Tinkerforge
 {
+    [DefaultProperty(nameof(Uid))]
+    [Description("Measures coordinates, altitude, modtion, timestamp, satellite status from a GPS Bricklet 2.0.")]
     public class BrickletGPSV2 : Combinator<IPConnection, BrickletGPSV2.CoordinateData>
     {
         [Description("The unique bricklet device UID.")]
