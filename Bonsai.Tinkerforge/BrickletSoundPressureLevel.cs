@@ -7,8 +7,8 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
-    [Description("Measures sound pressure and specture from a Sound Pressure Level Bricklet")]
-    public class BrickletSoundPressure : Combinator<IPConnection, int>
+    [Description("Measures sound pressure level (decibels) and spectrum from a Sound Pressure Level Bricklet.")]
+    public class BrickletSoundPressureLevel : Combinator<IPConnection, int>
     {
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
@@ -17,7 +17,7 @@ namespace Bonsai.Tinkerforge
         public long Period { get; set; } = 1000;
 
         [Description("Specifies the size, resolution and bin size of the FFT.")]
-        public FftSize FFTSize { get; set; } = FftSize.FftSize512;
+        public FftSizeConfig FftSize { get; set; } = FftSizeConfig.FftSize512;
 
         [Description("Specifies the dB weighting function.")]
         public WeightingFunction Weighting { get; set; } = WeightingFunction.WeightingITU;
@@ -27,19 +27,19 @@ namespace Bonsai.Tinkerforge
 
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
-            return source.SelectStream(connection =>
+            return source.SelectStream((Func<IPConnection, IObservable<int>>)(connection =>
             {
                 var device = new global::Tinkerforge.BrickletSoundPressureLevel(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
-                    device.SetConfiguration((byte)FFTSize, (byte)Weighting);
-                    device.SetDecibelCallbackConfiguration(Period, false, 'x', 0, 0);
+                    device.SetConfiguration((byte)this.FftSize, (byte)Weighting);
+                    device.SetDecibelCallbackConfiguration(Period, false, 'x', 0, 1);
                 };
 
                 return Observable.Create<int>(observer =>
                 {
-                    global::Tinkerforge.BrickletSoundPressureLevel.DecibelEventHandler handler = (sender, decibel) =>
+                    global::Tinkerforge.BrickletSoundPressureLevel.DecibelEventHandler handler = (global::Tinkerforge.BrickletSoundPressureLevel sender, int decibel) =>
                     {
                         observer.OnNext(decibel);
                     };
@@ -47,15 +47,15 @@ namespace Bonsai.Tinkerforge
                     device.DecibelCallback += handler;
                     return Disposable.Create(() =>
                     {
-                        try { device.SetDecibelCallbackConfiguration(0, false, 'x', 0, 0); }
+                        try { device.SetDecibelCallbackConfiguration(0, false, 'x', 0, 1); }
                         catch (NotConnectedException) { }
                         device.DecibelCallback -= handler;
                     });
                 });
-            });
+            }));
         }
 
-        public enum FftSize : byte
+        public enum FftSizeConfig : byte
         {
             FftSize128 = global::Tinkerforge.BrickletSoundPressureLevel.FFT_SIZE_128,
             FftSize256 = global::Tinkerforge.BrickletSoundPressureLevel.FFT_SIZE_256,

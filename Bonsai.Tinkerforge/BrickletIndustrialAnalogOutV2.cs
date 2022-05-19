@@ -1,7 +1,5 @@
-﻿using Bonsai.Expressions;
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -25,7 +23,11 @@ namespace Bonsai.Tinkerforge
 
         [Description("Specifies the behavior of the Out Status LED.")]
         public OutLedStatusConfig OutLedStatus { get; set; } = OutLedStatusConfig.Intensity;
+
+        [Description("Status LED minimum value.")]
         public int OutLedStatusMin { get; set; } = 0;
+
+        [Description("Status LED maximum value.")]
         public int OutLedStatusMax { get; set; } = 24000;
 
         [Description("Specifies the behavior of the status LED.")]
@@ -47,9 +49,6 @@ namespace Bonsai.Tinkerforge
                 {
                     device.SetVoltage(value);
                 });
-
-                // Set voltage when input is in range
-                //return signal.Where(value => value > 0 && value < 10000).Do(value => { device.SetVoltage(value); });
             });
         }
 

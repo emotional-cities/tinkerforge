@@ -7,7 +7,7 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
-    [Description("Measures different sizes of particulate matter from a Particulate Matter Bricklet")]
+    [Description("Measures different sizes of particulate matter from a Particulate Matter Bricklet.")]
     public class BrickletParticulateMatter : Combinator<IPConnection, BrickletParticulateMatter.DataFrame>
     {
         [Description("The unique bricklet device UID.")]
