@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures coordinates, altitude, modtion, timestamp, satellite status from a GPS Bricklet 2.0.")]
-    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData>>
+    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
     {
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
@@ -23,7 +23,7 @@ namespace Bonsai.Tinkerforge
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
         // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus - could generate several observables for each Get function and then Merge
-        public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData>> Process(IObservable<IPConnection> source)
+        public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData, DateTimeData>> Process(IObservable<IPConnection> source)
         {
             // Status stream
             IObservable<StatusData> statusStream = source.SelectStream(connection =>
@@ -31,6 +31,7 @@ namespace Bonsai.Tinkerforge
                 var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
+                    device.SetStatusCallbackPeriod(Period);
                 };
 
                 return Observable.Create<StatusData>(observer =>
@@ -56,6 +57,7 @@ namespace Bonsai.Tinkerforge
                 var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
+                    device.SetAltitudeCallbackPeriod(Period);
                 };
 
                 return Observable.Create<AltitudeData>(observer =>
@@ -71,6 +73,32 @@ namespace Bonsai.Tinkerforge
                         try { device.SetAltitudeCallbackPeriod(0); }
                         catch (NotConnectedException) { }
                         device.AltitudeCallback -= handler;
+                    });
+                });
+            });
+
+            // DateTime stream
+            IObservable<DateTimeData> dateTimeStream = source.SelectStream(connection =>
+            {
+                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                connection.Connected += (sender, e) =>
+                {
+                    device.SetDateTimeCallbackPeriod(Period);
+                };
+
+                return Observable.Create<DateTimeData>(observer =>
+                {
+                    global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
+                    {
+                        observer.OnNext(new DateTimeData(date, time));
+                    };
+
+                    device.DateTimeCallback += handler;
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetDateTimeCallbackPeriod(0); }
+                        catch (NotConnectedException) { }
+                        device.DateTimeCallback -= handler;
                     });
                 });
             });
@@ -103,7 +131,7 @@ namespace Bonsai.Tinkerforge
                 });
             });
 
-            return statusStream.Zip(coordinateStream, altitudeStream, (s1, s2, s3) => Tuple.Create(s1, s2, s3));
+            return statusStream.CombineLatest(coordinateStream, altitudeStream, dateTimeStream, (s1, s2, s3, s4) => Tuple.Create(s1, s2, s3, s4));
         }
 
         public struct CoordinateData
@@ -143,6 +171,18 @@ namespace Bonsai.Tinkerforge
             {
                 Altitude = altitude;
                 GeoidalSeparation = geoidalSeparation;
+            }
+        }
+
+        public struct DateTimeData
+        {
+            public long Date;
+            public long Time;
+
+            public DateTimeData (long date, long time)
+            {
+                Date = date;
+                Time = time;
             }
         }
 
