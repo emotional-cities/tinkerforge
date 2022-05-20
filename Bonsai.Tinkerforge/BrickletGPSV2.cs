@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures coordinates, altitude, modtion, timestamp, satellite status from a GPS Bricklet 2.0.")]
-    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
+    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.CoordinateData, BrickletGPSV2.DateTimeData, BrickletGPSV2.AltitudeData, BrickletGPSV2.StatusData>>
     {
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
@@ -22,116 +22,101 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
-        // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus - could generate several observables for each Get function and then Merge
-        public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData, DateTimeData>> Process(IObservable<IPConnection> source)
+        // Common build pattern for mapping Bricklet data callbacks to data structs
+        public IObservable<TResult> StreamFactory<TResult>(IObservable<IPConnection> ipSource, Func<IObserver<TResult>, global::Tinkerforge.BrickletGPSV2, IDisposable> dataCallbackBuilder) where TResult : struct
         {
-            // Status stream
-            IObservable<StatusData> statusStream = source.SelectStream(connection =>
+            IObservable<TResult> stream = ipSource.SelectStream(connection =>
             {
                 var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusCallbackPeriod(Period);
+                    device.SetDateTimeCallbackPeriod(Period);
+                    device.SetAltitudeCallbackPeriod(Period);
+                    device.SetCoordinatesCallbackPeriod(Period);
                 };
 
-                return Observable.Create<StatusData>(observer =>
+                return Observable.Create<TResult>(observer =>
                 {
-                    global::Tinkerforge.BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>
-                    {
-                        observer.OnNext(new StatusData(hasFix, satelliteView));
-                    };
+                    observer.OnNext(new TResult());
 
-                    device.StatusCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetStatusCallbackPeriod(0); }
-                        catch (NotConnectedException) { }
-                        device.StatusCallback -= handler;
-                    });
+                    return dataCallbackBuilder(observer, device);
                 });
             });
 
-            // Altitude stream
-            IObservable<AltitudeData> altitudeStream = source.SelectStream(connection =>
+            return stream;
+        }
+
+        // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus - could generate several observables for each Get function and then Merge
+        public override IObservable<Tuple<CoordinateData, DateTimeData, AltitudeData, StatusData>> Process(IObservable<IPConnection> source)
+        {
+            // Status stream
+            IObservable<StatusData> statusStream = StreamFactory<StatusData>(source, (observer, device) =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+                global::Tinkerforge.BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>
                 {
-                    device.SetAltitudeCallbackPeriod(Period);
+                    observer.OnNext(new StatusData(hasFix, satelliteView));
                 };
-
-                return Observable.Create<AltitudeData>(observer =>
+                device.StatusCallback += handler;
+                return Disposable.Create(() =>
                 {
-                    global::Tinkerforge.BrickletGPSV2.AltitudeEventHandler handler = (sender, altitude, geoidalSeparation) =>
-                    {
-                        observer.OnNext(new AltitudeData(altitude, geoidalSeparation));
-                    };
+                    try { device.SetStatusCallbackPeriod(0); }
+                    catch (NotConnectedException) { }
+                    device.StatusCallback -= handler;
+                });
+            });
 
-                    device.AltitudeCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetAltitudeCallbackPeriod(0); }
-                        catch (NotConnectedException) { }
-                        device.AltitudeCallback -= handler;
-                    });
+
+            // Altitude stream
+            IObservable<AltitudeData> altitudeStream = StreamFactory<AltitudeData>(source, (observer, device) =>
+            {
+                global::Tinkerforge.BrickletGPSV2.AltitudeEventHandler handler = (sender, altitude, geoidalSeparation) =>
+                {
+                    observer.OnNext(new AltitudeData(altitude, geoidalSeparation));
+                };
+                device.AltitudeCallback += handler;
+                return Disposable.Create(() =>
+                {
+                    try { device.SetAltitudeCallbackPeriod(0); }
+                    catch (NotConnectedException) { }
+                    device.AltitudeCallback -= handler;
                 });
             });
 
             // DateTime stream
-            IObservable<DateTimeData> dateTimeStream = source.SelectStream(connection =>
+            IObservable<DateTimeData> dateTimeStream = StreamFactory<DateTimeData>(source, (observer, device) =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+                global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
                 {
-                    device.SetDateTimeCallbackPeriod(Period);
+                    observer.OnNext(new DateTimeData(date, time));
                 };
-
-                return Observable.Create<DateTimeData>(observer =>
+                device.DateTimeCallback += handler;
+                return Disposable.Create(() =>
                 {
-                    global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
-                    {
-                        observer.OnNext(new DateTimeData(date, time));
-                    };
-
-                    device.DateTimeCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetDateTimeCallbackPeriod(0); }
-                        catch (NotConnectedException) { }
-                        device.DateTimeCallback -= handler;
-                    });
+                    try { device.SetDateTimeCallbackPeriod(0); }
+                    catch (NotConnectedException) { }
+                    device.DateTimeCallback -= handler;
                 });
             });
+
 
             // Coordinate stream
-            IObservable<CoordinateData> coordinateStream = source.SelectStream(connection =>
+            IObservable<CoordinateData> coordinateStream = StreamFactory<CoordinateData>(source, (observer, device) =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+                global::Tinkerforge.BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
                 {
-                    device.SetStatusLEDConfig((byte)StatusLed);
-                    device.SetSBASConfig((byte)SBAS);
-                    device.SetCoordinatesCallbackPeriod(Period);
+                    observer.OnNext(new CoordinateData(latitude, longitude, ns, ew));
                 };
-
-                return Observable.Create<CoordinateData>(observer =>
+                device.CoordinatesCallback += handler;
+                return Disposable.Create(() =>
                 {
-                    global::Tinkerforge.BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
-                    {
-                        observer.OnNext(new CoordinateData(latitude, longitude, ns, ew));
-                    };
-
-                    device.CoordinatesCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetCoordinatesCallbackPeriod(0); }
-                        catch (NotConnectedException) { }
-                        device.CoordinatesCallback -= handler;
-                    });
+                    try { device.SetCoordinatesCallbackPeriod(0); }
+                    catch (NotConnectedException) { }
+                    device.CoordinatesCallback -= handler;
                 });
             });
 
-            return statusStream.CombineLatest(coordinateStream, altitudeStream, dateTimeStream, (s1, s2, s3, s4) => Tuple.Create(s1, s2, s3, s4));
+            return coordinateStream.CombineLatest(dateTimeStream, altitudeStream, statusStream, (s1, s2, s3, s4) => Tuple.Create(s1, s2, s3, s4));
         }
 
         public struct CoordinateData
