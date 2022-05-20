@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures coordinates, altitude, modtion, timestamp, satellite status from a GPS Bricklet 2.0.")]
-    public class BrickletGPSV2 : Combinator<IPConnection, BrickletGPSV2.CoordinateData>
+    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData>>
     {
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
@@ -23,9 +23,60 @@ namespace Bonsai.Tinkerforge
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
         // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus - could generate several observables for each Get function and then Merge
-        public override IObservable<CoordinateData> Process(IObservable<IPConnection> source)
+        public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData>> Process(IObservable<IPConnection> source)
         {
-            return source.SelectStream(connection =>
+            // Status stream
+            IObservable<StatusData> statusStream = source.SelectStream(connection =>
+            {
+                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                connection.Connected += (sender, e) =>
+                {
+                };
+
+                return Observable.Create<StatusData>(observer =>
+                {
+                    global::Tinkerforge.BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>
+                    {
+                        observer.OnNext(new StatusData(hasFix, satelliteView));
+                    };
+
+                    device.StatusCallback += handler;
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetStatusCallbackPeriod(0); }
+                        catch (NotConnectedException) { }
+                        device.StatusCallback -= handler;
+                    });
+                });
+            });
+
+            // Altitude stream
+            IObservable<AltitudeData> altitudeStream = source.SelectStream(connection =>
+            {
+                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                connection.Connected += (sender, e) =>
+                {
+                };
+
+                return Observable.Create<AltitudeData>(observer =>
+                {
+                    global::Tinkerforge.BrickletGPSV2.AltitudeEventHandler handler = (sender, altitude, geoidalSeparation) =>
+                    {
+                        observer.OnNext(new AltitudeData(altitude, geoidalSeparation));
+                    };
+
+                    device.AltitudeCallback += handler;
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetAltitudeCallbackPeriod(0); }
+                        catch (NotConnectedException) { }
+                        device.AltitudeCallback -= handler;
+                    });
+                });
+            });
+
+            // Coordinate stream
+            IObservable<CoordinateData> coordinateStream = source.SelectStream(connection =>
             {
                 var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
@@ -51,6 +102,8 @@ namespace Bonsai.Tinkerforge
                     });
                 });
             });
+
+            return statusStream.Zip(coordinateStream, altitudeStream, (s1, s2, s3) => Tuple.Create(s1, s2, s3));
         }
 
         public struct CoordinateData
@@ -66,6 +119,30 @@ namespace Bonsai.Tinkerforge
                 Longitude = longitude;
                 NS = ns;
                 EW = ew;
+            }
+        }
+
+        public struct StatusData
+        {
+            public bool HasFix;
+            public byte SatellitesView;
+
+            public StatusData(bool hasFix, byte satellitesView)
+            {
+                HasFix = hasFix;
+                SatellitesView = satellitesView;
+            }
+        }
+
+        public struct AltitudeData
+        {
+            public int Altitude;
+            public int GeoidalSeparation;
+
+            public AltitudeData (int altitude, int geoidalSeparation)
+            {
+                Altitude = altitude;
+                GeoidalSeparation = geoidalSeparation;
             }
         }
 
