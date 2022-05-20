@@ -23,6 +23,7 @@ namespace Bonsai.Tinkerforge
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
         // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus - could generate several observables for each Get function and then Merge
+        // TODO - there is alot of repeated code here. gps-struct-test branch has a potential solution but is arguably worse to read. Hard to create generic StreamFactory method due to multiple separate event handlers and data types on each Bricklet 
         public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData, DateTimeData>> Process(IObservable<IPConnection> source)
         {
             // Status stream
@@ -36,6 +37,8 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<StatusData>(observer =>
                 {
+                    observer.OnNext(new StatusData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
+
                     global::Tinkerforge.BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>
                     {
                         observer.OnNext(new StatusData(hasFix, satelliteView));
@@ -62,6 +65,8 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<AltitudeData>(observer =>
                 {
+                    observer.OnNext(new AltitudeData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
+
                     global::Tinkerforge.BrickletGPSV2.AltitudeEventHandler handler = (sender, altitude, geoidalSeparation) =>
                     {
                         observer.OnNext(new AltitudeData(altitude, geoidalSeparation));
@@ -88,6 +93,8 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<DateTimeData>(observer =>
                 {
+                    observer.OnNext(new DateTimeData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
+
                     global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
                     {
                         observer.OnNext(new DateTimeData(date, time));
@@ -116,6 +123,8 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<CoordinateData>(observer =>
                 {
+                    observer.OnNext(new CoordinateData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
+
                     global::Tinkerforge.BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
                     {
                         observer.OnNext(new CoordinateData(latitude, longitude, ns, ew));
