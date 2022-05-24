@@ -7,7 +7,7 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
-    [Description("Measures coordinates, altitude, motion, timestamp, satellite status from a GPS Bricklet 2.0.")]
+    [Description("Measures coordinates, satellite status, altitude, timestamp, from a GPS Bricklet 2.0.")]
     public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.CoordinateData, BrickletGPSV2.StatusData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
     {
         [TypeConverter(typeof(UidConverter))]
