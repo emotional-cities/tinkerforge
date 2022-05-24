@@ -7,17 +7,17 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
-    [Description("Measures coordinates, altitude, modtion, timestamp, satellite status from a GPS Bricklet 2.0.")]
+    [Description("Measures coordinates, altitude, motion, timestamp, satellite status from a GPS Bricklet 2.0.")]
     public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
 
-        [Description("If SBAS is enabled, the position accuracy increases (if SBAS satellites are in view), but the update rate is limited to 5Hz. With SBAS disabled the update rate is increased to 10Hz.")]
+        [Description("If SBAS (Satellite-based Augmentation System) is enabled, the position accuracy increases (if SBAS satellites are in view), but the update rate is limited to 5Hz. With SBAS disabled the update rate is increased to 10Hz.")]
         public SBASConfig SBAS { get; set; } = SBASConfig.Disabled;
 
         [Description("Specifies the behavior of the status LED.")]

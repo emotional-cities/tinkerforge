@@ -10,8 +10,8 @@ namespace Bonsai.Tinkerforge
     [Description("Measure IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet.")]
     public class BrickletAirQuality : Combinator<IPConnection, BrickletAirQuality.DataFrame>
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

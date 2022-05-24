@@ -10,8 +10,8 @@ namespace Bonsai.Tinkerforge
     [Description("Measures sound pressure level (decibels) and spectrum from a Sound Pressure Level Bricklet.")]
     public class BrickletSoundPressureLevel : Combinator<IPConnection, int>
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

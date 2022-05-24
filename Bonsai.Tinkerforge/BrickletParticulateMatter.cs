@@ -10,8 +10,8 @@ namespace Bonsai.Tinkerforge
     [Description("Measures different sizes of particulate matter from a Particulate Matter Bricklet.")]
     public class BrickletParticulateMatter : Combinator<IPConnection, BrickletParticulateMatter.DataFrame>
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

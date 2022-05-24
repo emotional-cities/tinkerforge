@@ -10,14 +10,14 @@ namespace Bonsai.Tinkerforge
     [Description("Measures relative humidity from a Humidity Bricklet 2.0.")]
     public class BrickletHumidityV2 : Combinator<IPConnection, int>
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
         public long Period { get; set; } = 1000;
 
-        [Description("Specifies the heater configuration. The heater can be used to dry the sensor in extremely wet conditions")]
+        [Description("Specifies the heater configuration. The heater can be used to dry the sensor in extremely wet conditions.")]
 
         public HeaterConfig Heater { get; set; } = HeaterConfig.Disabled;
 

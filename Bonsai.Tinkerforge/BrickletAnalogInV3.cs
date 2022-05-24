@@ -10,6 +10,7 @@ namespace Bonsai.Tinkerforge
     [Description("Measures analog signal from an Analog In Bricklet 3.0.")]
     public class BrickletAnalogInV3 : Combinator<IPConnection, int>
     {
+        [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 

@@ -10,8 +10,8 @@ namespace Bonsai.Tinkerforge
     [Description("Measures temperature using thermocouple wires from a Thermocouple Bricklet 2.0.")]
     public class BrickletThermocoupleV2
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

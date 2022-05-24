@@ -10,8 +10,8 @@ namespace Bonsai.Tinkerforge
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
     public class BrickletCO2V2 : Combinator<IPConnection, BrickletCO2V2.DataFrame>
     {
-        [Description("Device data including address UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("Device data including address UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

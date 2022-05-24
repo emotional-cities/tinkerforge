@@ -10,8 +10,8 @@ namespace Bonsai.Tinkerforge
     [Description("Measures ambient illuminance from an Ambient Light Bricklet 3.0.")]
     public class BrickletAmbientLightV3 : Combinator<IPConnection, long>
     {
-        [Description("Device data including address UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("Device data including address UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

@@ -9,14 +9,14 @@ namespace Bonsai.Tinkerforge
     [Description("Writes an analog output signal (int x.xxx, 3300 = 3.3V, 0-10V range) to an Industrial Analog OUT Bricklet 2.0.")]
     public class BrickletIndustrialAnalogOutV2
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
-        [Description("Specifies the output voltage range")]
+        [Description("Specifies the output voltage range.")]
         public VoltageRangeConfig VoltageRange { get; set; } = VoltageRangeConfig.Range0To10V;
 
-        [Description("Specifies the output current range")]
+        [Description("Specifies the output current range.")]
         public CurrentRangeConfig CurrentRange { get; set; } = CurrentRangeConfig.Range0To24mA;
 
         [Description("Specifies the behavior of the Out LED.")]

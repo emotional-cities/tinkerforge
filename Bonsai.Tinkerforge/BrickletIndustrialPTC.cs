@@ -7,11 +7,11 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
-    [Description("Measures temperature with Pt100 and Pt1000 sensors from a PTC Industrial Bricklet")]
+    [Description("Measures temperature with Pt100 and Pt1000 sensors from a PTC Industrial Bricklet.")]
     public class BrickletIndustrialPTC : Combinator<IPConnection, int>
     {
-        [Description("The unique bricklet device UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
