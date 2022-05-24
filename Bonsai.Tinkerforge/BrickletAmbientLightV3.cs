@@ -6,11 +6,12 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [DefaultProperty(nameof(Uid))]
+    [DefaultProperty(nameof(Device))]
     [Description("Measures ambient illuminance from an Ambient Light Bricklet 3.0.")]
     public class BrickletAmbientLightV3 : Combinator<IPConnection, long>
     {
-        [Description("The unique bricklet device UID.")]
+        [Description("Device data including address UID.")]
+        [TypeConverter(typeof(UidConverter))]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
@@ -23,7 +24,7 @@ namespace Bonsai.Tinkerforge
         public IntegrationTimeConfig IntegrationTime { get; set; }
 
         [Description("Specifies the behavior of the status LED.")]
-        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
+        public AmbientLightV3StatusLedConfig StatusLed { get; set; } = AmbientLightV3StatusLedConfig.ShowStatus;
 
         public override IObservable<long> Process(IObservable<IPConnection> source)
         {
@@ -72,7 +73,7 @@ namespace Bonsai.Tinkerforge
             Integration400ms = global::Tinkerforge.BrickletAmbientLightV3.INTEGRATION_TIME_400MS,
         }
 
-        public enum StatusLedConfig : byte
+        public enum AmbientLightV3StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletAmbientLightV3.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletAmbientLightV3.STATUS_LED_CONFIG_ON,
