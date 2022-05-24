@@ -11,6 +11,7 @@ namespace Bonsai.Tinkerforge
     public class BrickletAirQuality : Combinator<IPConnection, BrickletAirQuality.DataFrame>
     {
         [Description("The unique bricklet device UID.")]
+        [TypeConverter(typeof(UidConverter))]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

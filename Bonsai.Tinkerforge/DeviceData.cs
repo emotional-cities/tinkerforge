@@ -31,6 +31,7 @@ namespace Bonsai.Tinkerforge
 
         public override string ToString()
         {
+            Console.WriteLine(DeviceIdentifier);
             return $"{TinkerforgeDeviceLookup.Defaults[DeviceIdentifier]}:{Uid}";
         }
     }
@@ -42,9 +43,19 @@ namespace Bonsai.Tinkerforge
     {
         public static readonly Dictionary<int, string> Defaults = new Dictionary<int, string>
         {
-            { 13,  "Master Brick"},
-            { 2131, "Ambient Light Bricklet 3.0"},
-            { 2147, "CO2 Bricklet 2.0" }
+            { global::Tinkerforge.BrickMaster.DEVICE_IDENTIFIER,  global::Tinkerforge.BrickMaster.DEVICE_DISPLAY_NAME},
+            { global::Tinkerforge.BrickletAmbientLightV3.DEVICE_IDENTIFIER,  global::Tinkerforge.BrickletAmbientLightV3.DEVICE_DISPLAY_NAME},
+            { global::Tinkerforge.BrickletCO2V2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletCO2V2.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletAccelerometer.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletAccelerometer.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletAirQuality.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletAirQuality.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletGPSV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletGPSV2.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletHumidityV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletHumidityV2.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletIndustrialAnalogOutV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletIndustrialPTC.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletIndustrialPTC.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletParticulateMatter.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletParticulateMatter.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletSoundPressureLevel.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletThermocoupleV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletThermocoupleV2.DEVICE_DISPLAY_NAME },
+            { global::Tinkerforge.BrickletAnalogInV3.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletAnalogInV3.DEVICE_DISPLAY_NAME }
         };
     }
 }

@@ -6,7 +6,7 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [DefaultProperty(nameof(Device))]
+    [DefaultProperty(nameof(Uid))]
     [Description("Measures ambient illuminance from an Ambient Light Bricklet 3.0.")]
     public class BrickletAmbientLightV3 : Combinator<IPConnection, long>
     {

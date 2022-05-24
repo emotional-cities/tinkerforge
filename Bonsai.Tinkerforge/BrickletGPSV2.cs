@@ -11,6 +11,7 @@ namespace Bonsai.Tinkerforge
     public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
     {
         [Description("The unique bricklet device UID.")]
+        [TypeConverter(typeof(UidConverter))]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

@@ -11,6 +11,7 @@ namespace Bonsai.Tinkerforge
     public class BrickletSoundPressureLevel : Combinator<IPConnection, int>
     {
         [Description("The unique bricklet device UID.")]
+        [TypeConverter(typeof(UidConverter))]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
