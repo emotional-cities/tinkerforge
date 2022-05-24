@@ -6,7 +6,6 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [Combinator]
     [DefaultProperty(nameof(Uid))]
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
     public class BrickletCO2V2 : Combinator<IPConnection, BrickletCO2V2.DataFrame>
