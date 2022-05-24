@@ -12,7 +12,7 @@ namespace Bonsai.Tinkerforge
     internal class UidConverter : StringConverter
     {
         // Cache for discovered Brick / Bricklet devices
-        public Dictionary<string, DeviceData> devices;
+        private Dictionary<string, DeviceData> devices;
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
