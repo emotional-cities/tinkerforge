@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures coordinates, altitude, motion, timestamp, satellite status from a GPS Bricklet 2.0.")]
-    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.StatusData, BrickletGPSV2.CoordinateData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
+    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.CoordinateData, BrickletGPSV2.StatusData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -23,8 +23,38 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
-        public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData, DateTimeData>> Process(IObservable<IPConnection> source)
+        public override IObservable<Tuple<CoordinateData, StatusData, AltitudeData, DateTimeData>> Process(IObservable<IPConnection> source)
         {
+            // Coordinate stream
+            IObservable<CoordinateData> coordinateStream = source.SelectStream(connection =>
+            {
+                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                connection.Connected += (sender, e) =>
+                {
+                    device.SetStatusLEDConfig((byte)StatusLed);
+                    device.SetSBASConfig((byte)SBAS);
+                    device.SetCoordinatesCallbackPeriod(Period);
+                };
+
+                return Observable.Create<CoordinateData>(observer =>
+                {
+                    observer.OnNext(new CoordinateData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
+
+                    global::Tinkerforge.BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
+                    {
+                        observer.OnNext(new CoordinateData(latitude, longitude, ns, ew));
+                    };
+
+                    device.CoordinatesCallback += handler;
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetCoordinatesCallbackPeriod(0); }
+                        catch (NotConnectedException) { }
+                        device.CoordinatesCallback -= handler;
+                    });
+                });
+            });
+
             // Status stream
             IObservable<StatusData> statusStream = source.SelectStream(connection =>
             {
@@ -109,37 +139,7 @@ namespace Bonsai.Tinkerforge
                 });
             });
 
-            // Coordinate stream
-            IObservable<CoordinateData> coordinateStream = source.SelectStream(connection =>
-            {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
-                connection.Connected += (sender, e) =>
-                {
-                    device.SetStatusLEDConfig((byte)StatusLed);
-                    device.SetSBASConfig((byte)SBAS);
-                    device.SetCoordinatesCallbackPeriod(Period);
-                };
-
-                return Observable.Create<CoordinateData>(observer =>
-                {
-                    observer.OnNext(new CoordinateData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
-
-                    global::Tinkerforge.BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
-                    {
-                        observer.OnNext(new CoordinateData(latitude, longitude, ns, ew));
-                    };
-
-                    device.CoordinatesCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetCoordinatesCallbackPeriod(0); }
-                        catch (NotConnectedException) { }
-                        device.CoordinatesCallback -= handler;
-                    });
-                });
-            });
-
-            return statusStream.CombineLatest(coordinateStream, altitudeStream, dateTimeStream, (s1, s2, s3, s4) => Tuple.Create(s1, s2, s3, s4));
+            return coordinateStream.CombineLatest(statusStream, altitudeStream, dateTimeStream, (s1, s2, s3, s4) => Tuple.Create(s1, s2, s3, s4));
         }
 
         public struct CoordinateData
