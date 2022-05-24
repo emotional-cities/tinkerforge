@@ -9,17 +9,12 @@ namespace Bonsai.Tinkerforge
     /// <summary>
     /// Data representation of a connected TinkerForge module
     /// </summary>
-    public class DeviceData
+    internal class DeviceData
     {
         public string Uid; // Unique module ID
         public string ConnectedUid; // IDs of connected modules
         public char Position; // Position in the network
         public int DeviceIdentifier; // Number corresponding to device name
-
-        // Parameterless constructor required for serialization
-        public DeviceData()
-        {
-        }
 
         public DeviceData(string uid, string connectedUid, char position, int deviceIdentifier)
         {
