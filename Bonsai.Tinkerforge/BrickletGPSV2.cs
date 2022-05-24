@@ -22,8 +22,6 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
-        // TODO - can we get all the GPS data structures output here? GetStatus, GetAltitude, GetMotion, GetDateTime, GetSatelliteSystemStatus - could generate several observables for each Get function and then Merge
-        // TODO - there is alot of repeated code here. gps-struct-test branch has a potential solution but is arguably worse to read. Hard to create generic StreamFactory method due to multiple separate event handlers and data types on each Bricklet 
         public override IObservable<Tuple<StatusData, CoordinateData, AltitudeData, DateTimeData>> Process(IObservable<IPConnection> source)
         {
             // Status stream
