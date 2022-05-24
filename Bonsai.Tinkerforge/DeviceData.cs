@@ -31,7 +31,6 @@ namespace Bonsai.Tinkerforge
 
         public override string ToString()
         {
-            Console.WriteLine(DeviceIdentifier);
             return $"{TinkerforgeDeviceLookup.Defaults[DeviceIdentifier]}:{Uid}";
         }
     }
