@@ -26,6 +26,11 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletCO2V2StatusLedConfig StatusLed { get; set; } = BrickletCO2V2StatusLedConfig.ShowStatus;
 
+        public override string ToString()
+        {
+            return BrickletCO2V2.DEVICE_DISPLAY_NAME;
+        }
+
         public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>

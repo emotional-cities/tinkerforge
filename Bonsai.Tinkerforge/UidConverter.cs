@@ -83,7 +83,12 @@ namespace Bonsai.Tinkerforge
                         ipcon.Disconnect();
                     }
                 }
-                return new StandardValuesCollection(devices.Values.ToList());
+
+                // Return the list of connected devices, filter by those that match the context instance (e.g. if context is AirQuality, only return AirQualityDevices)
+                return new StandardValuesCollection(devices.Values
+                    .Where(dev => TinkerforgeDeviceLookup.Defaults[dev.DeviceIdentifier] == context.Instance.ToString())
+                    .ToList()
+                );
             }
 
             return base.GetStandardValues(context);
@@ -147,7 +152,8 @@ namespace Bonsai.Tinkerforge
                 { BrickletParticulateMatter.DEVICE_IDENTIFIER, BrickletParticulateMatter.DEVICE_DISPLAY_NAME },
                 { BrickletSoundPressureLevel.DEVICE_IDENTIFIER, BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME },
                 { BrickletThermocoupleV2.DEVICE_IDENTIFIER, BrickletThermocoupleV2.DEVICE_DISPLAY_NAME },
-                { BrickletAnalogInV3.DEVICE_IDENTIFIER, BrickletAnalogInV3.DEVICE_DISPLAY_NAME }
+                { BrickletAnalogInV3.DEVICE_IDENTIFIER, BrickletAnalogInV3.DEVICE_DISPLAY_NAME },
+                { BrickletAnalogOutV3.DEVICE_IDENTIFIER, BrickletAnalogOutV3.DEVICE_DISPLAY_NAME }
             };
         }
     }

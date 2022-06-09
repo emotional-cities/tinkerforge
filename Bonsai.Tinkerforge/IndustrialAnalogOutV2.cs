@@ -34,6 +34,11 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletIndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = BrickletIndustrialAnalogOutV2StatusLedConfig.ShowStatus;
 
+        public override string ToString()
+        {
+            return BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME;
+        }
+
         public IObservable<int> Generate(IObservable<IPConnection> source, IObservable<int> signal)
         {
             return source.SelectStream(connection =>

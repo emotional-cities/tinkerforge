@@ -26,6 +26,11 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletSoundPressureStatusLedConfig StatusLed { get; set; } = BrickletSoundPressureStatusLedConfig.ShowStatus;
 
+        public override string ToString()
+        {
+            return BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME;
+        }
+
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream((Func<IPConnection, IObservable<int>>)(connection =>

@@ -32,6 +32,11 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletHumidityStatusLedConfig StatusLed { get; set; } = BrickletHumidityStatusLedConfig.ShowStatus;
 
+        public override string ToString()
+        {
+            return BrickletHumidityV2.DEVICE_DISPLAY_NAME;
+        }
+
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>

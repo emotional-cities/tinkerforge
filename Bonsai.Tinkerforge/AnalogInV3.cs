@@ -20,6 +20,10 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletAnalogInV3LedConfig StatusLed { get; set; } = BrickletAnalogInV3LedConfig.ShowStatus;
 
+        public override string ToString()
+        {
+            return BrickletAnalogInV3.DEVICE_DISPLAY_NAME;
+        }
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
