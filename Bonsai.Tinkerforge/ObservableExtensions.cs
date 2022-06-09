@@ -8,12 +8,12 @@ namespace Bonsai.Tinkerforge
 {
     static class ObservableExtensions
     {
-        public static IObservable<TResult> SelectStream<TResult>(this IObservable<IPConnection> source, Func<IPConnection, IObservable<TResult>> selector)
+        public static IObservable<TResult> SelectStream<TSource, TResult>(this IObservable<TSource> source, Func<TSource, IObservable<TResult>> selector)
         {
             return Observable.Create<TResult>(observer =>
             {
                 var sourceDisposable = new CompositeDisposable();
-                var connectionObserver = Observer.Create<IPConnection>(
+                var connectionObserver = Observer.Create<TSource>(
                     connection =>
                     {
                         var stream = selector(connection);
