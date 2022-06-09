@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures different sizes of particulate matter from a Particulate Matter Bricklet.")]
-    public class BrickletParticulateMatter : Combinator<IPConnection, BrickletParticulateMatter.DataFrame>
+    public class ParticulateMatter : Combinator<IPConnection, ParticulateMatter.DataFrame>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -24,7 +24,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletParticulateMatter(Uid, connection);
+                var device = new BrickletParticulateMatter(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -33,7 +33,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<DataFrame>(observer =>
                 {
-                    global::Tinkerforge.BrickletParticulateMatter.PMConcentrationEventHandler handler = (sender, pm10, pm25, pm100) =>
+                    BrickletParticulateMatter.PMConcentrationEventHandler handler = (sender, pm10, pm25, pm100) =>
                     {
                         observer.OnNext(new DataFrame(pm10, pm25, pm100));
                     };
@@ -65,10 +65,10 @@ namespace Bonsai.Tinkerforge
 
         public enum BrickletParticulateMatterStatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletParticulateMatter.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletParticulateMatter.STATUS_LED_CONFIG_OFF,
+            On = BrickletParticulateMatter.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletParticulateMatter.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletParticulateMatter.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

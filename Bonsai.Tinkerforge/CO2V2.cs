@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
-    public class BrickletCO2V2 : Combinator<IPConnection, BrickletCO2V2.DataFrame>
+    public class CO2V2 : Combinator<IPConnection, CO2V2.DataFrame>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("Device data including address UID.")]
@@ -30,7 +30,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletCO2V2(Uid, connection);
+                var device = new BrickletCO2V2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -41,7 +41,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<DataFrame>(observer =>
                 {
-                    global::Tinkerforge.BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
+                    BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
                     {
                         observer.OnNext(new DataFrame(co2Concentration, temperature, humidity));
                     };
@@ -73,10 +73,10 @@ namespace Bonsai.Tinkerforge
 
         public enum BrickletCO2V2StatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletCO2V2.STATUS_LED_CONFIG_OFF,
+            On = BrickletCO2V2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

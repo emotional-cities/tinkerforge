@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures temperature with Pt100 and Pt1000 sensors from a PTC Industrial Bricklet.")]
-    public class BrickletIndustrialPTC : Combinator<IPConnection, int>
+    public class IndustrialPTC : Combinator<IPConnection, int>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -35,7 +35,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletIndustrialPTC(Uid, connection);
+                var device = new BrickletIndustrialPTC(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -46,7 +46,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<int>(observer =>
                 {
-                    global::Tinkerforge.BrickletIndustrialPTC.TemperatureEventHandler handler = (sender, temperature) =>
+                    BrickletIndustrialPTC.TemperatureEventHandler handler = (sender, temperature) =>
                     {
                         observer.OnNext(temperature);
                     };
@@ -64,17 +64,17 @@ namespace Bonsai.Tinkerforge
 
         public enum WireModeConfig : byte
         {
-            WireMode2 = global::Tinkerforge.BrickletIndustrialPTC.WIRE_MODE_2,
-            WireMode3 = global::Tinkerforge.BrickletIndustrialPTC.WIRE_MODE_3,
-            WireMode4 = global::Tinkerforge.BrickletIndustrialPTC.WIRE_MODE_4,
+            WireMode2 = BrickletIndustrialPTC.WIRE_MODE_2,
+            WireMode3 = BrickletIndustrialPTC.WIRE_MODE_3,
+            WireMode4 = BrickletIndustrialPTC.WIRE_MODE_4,
         }
 
         public enum BrickletIndustrialPTCStatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletIndustrialPTC.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletIndustrialPTC.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletIndustrialPTC.STATUS_LED_CONFIG_OFF,
+            On = BrickletIndustrialPTC.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

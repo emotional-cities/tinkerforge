@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures relative humidity from a Humidity Bricklet 2.0.")]
-    public class BrickletHumidityV2 : Combinator<IPConnection, int>
+    public class HumidityV2 : Combinator<IPConnection, int>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -36,7 +36,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletHumidityV2(Uid, connection);
+                var device = new BrickletHumidityV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -47,7 +47,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<int>(observer =>
                 {
-                    global::Tinkerforge.BrickletHumidityV2.HumidityEventHandler handler = (sender, humidity) =>
+                    BrickletHumidityV2.HumidityEventHandler handler = (sender, humidity) =>
                     {
                         observer.OnNext(humidity);
                     };
@@ -65,16 +65,16 @@ namespace Bonsai.Tinkerforge
 
         public enum HeaterConfig : byte
         {
-            Disabled = global::Tinkerforge.BrickletHumidityV2.HEATER_CONFIG_DISABLED,
-            Enabled = global::Tinkerforge.BrickletHumidityV2.HEATER_CONFIG_ENABLED
+            Disabled = BrickletHumidityV2.HEATER_CONFIG_DISABLED,
+            Enabled = BrickletHumidityV2.HEATER_CONFIG_ENABLED
         }
 
         public enum BrickletHumidityStatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
+            On = BrickletHumidityV2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measure IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet.")]
-    public class BrickletAirQuality : Combinator<IPConnection, BrickletAirQuality.DataFrame>
+    public class AirQuality : Combinator<IPConnection, AirQuality.DataFrame>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -30,7 +30,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletAirQuality(Uid, connection);
+                var device = new BrickletAirQuality(Uid, connection);
                 connection.Connected += (sender, e) => {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetTemperatureOffset(TemperatureOffset);
@@ -40,7 +40,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<DataFrame>(observer =>
                 {
-                    global::Tinkerforge.BrickletAirQuality.AllValuesEventHandler handler = (sender, iaqIndex, iaqAccuracy, temperature, humidity, airPressure) =>
+                    BrickletAirQuality.AllValuesEventHandler handler = (sender, iaqIndex, iaqAccuracy, temperature, humidity, airPressure) =>
                     {
                         observer.OnNext(new DataFrame(iaqIndex, iaqAccuracy, temperature, humidity, airPressure));
                     };
@@ -76,16 +76,16 @@ namespace Bonsai.Tinkerforge
 
         public enum BackgroundCalibrationDurationConfig : byte
         {
-            Days4 = global::Tinkerforge.BrickletAirQuality.DURATION_4_DAYS,
-            Days28 = global::Tinkerforge.BrickletAirQuality.DURATION_28_DAYS
+            Days4 = BrickletAirQuality.DURATION_4_DAYS,
+            Days28 = BrickletAirQuality.DURATION_28_DAYS
         }
 
         public enum BrickletAirQualityStatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletAirQuality.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletAirQuality.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletAirQuality.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletAirQuality.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletAirQuality.STATUS_LED_CONFIG_OFF,
+            On = BrickletAirQuality.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletAirQuality.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletAirQuality.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

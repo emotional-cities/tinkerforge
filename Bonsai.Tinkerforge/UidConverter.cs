@@ -61,7 +61,7 @@ namespace Bonsai.Tinkerforge
                 if (workflowBuilder != null)
                 {
                     var connectionIDs = (from builder in workflowBuilder.Workflow.Descendants()
-                                         let createIP = ExpressionBuilder.GetWorkflowElement(builder) as CreateIPConnection
+                                         let createIP = ExpressionBuilder.GetWorkflowElement(builder) as CreateBrickConnection
                                          where createIP != null
                                          select new ConnectionID { HostName = createIP.HostName, Port = createIP.Port })
                                             .Distinct().ToList();
@@ -135,19 +135,19 @@ namespace Bonsai.Tinkerforge
         {
             public static readonly Dictionary<int, string> Defaults = new Dictionary<int, string>
             {
-                { global::Tinkerforge.BrickMaster.DEVICE_IDENTIFIER,  global::Tinkerforge.BrickMaster.DEVICE_DISPLAY_NAME},
-                { global::Tinkerforge.BrickletAmbientLightV3.DEVICE_IDENTIFIER,  global::Tinkerforge.BrickletAmbientLightV3.DEVICE_DISPLAY_NAME},
-                { global::Tinkerforge.BrickletCO2V2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletCO2V2.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletAccelerometer.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletAccelerometer.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletAirQuality.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletAirQuality.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletGPSV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletGPSV2.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletHumidityV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletHumidityV2.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletIndustrialAnalogOutV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletIndustrialPTC.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletIndustrialPTC.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletParticulateMatter.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletParticulateMatter.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletSoundPressureLevel.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletThermocoupleV2.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletThermocoupleV2.DEVICE_DISPLAY_NAME },
-                { global::Tinkerforge.BrickletAnalogInV3.DEVICE_IDENTIFIER, global::Tinkerforge.BrickletAnalogInV3.DEVICE_DISPLAY_NAME }
+                { BrickMaster.DEVICE_IDENTIFIER,  BrickMaster.DEVICE_DISPLAY_NAME},
+                { BrickletAmbientLightV3.DEVICE_IDENTIFIER,  BrickletAmbientLightV3.DEVICE_DISPLAY_NAME},
+                { BrickletCO2V2.DEVICE_IDENTIFIER, BrickletCO2V2.DEVICE_DISPLAY_NAME },
+                { BrickletAccelerometer.DEVICE_IDENTIFIER, BrickletAccelerometer.DEVICE_DISPLAY_NAME },
+                { BrickletAirQuality.DEVICE_IDENTIFIER, BrickletAirQuality.DEVICE_DISPLAY_NAME },
+                { BrickletGPSV2.DEVICE_IDENTIFIER, BrickletGPSV2.DEVICE_DISPLAY_NAME },
+                { BrickletHumidityV2.DEVICE_IDENTIFIER, BrickletHumidityV2.DEVICE_DISPLAY_NAME },
+                { BrickletIndustrialAnalogOutV2.DEVICE_IDENTIFIER, BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME },
+                { BrickletIndustrialPTC.DEVICE_IDENTIFIER, BrickletIndustrialPTC.DEVICE_DISPLAY_NAME },
+                { BrickletParticulateMatter.DEVICE_IDENTIFIER, BrickletParticulateMatter.DEVICE_DISPLAY_NAME },
+                { BrickletSoundPressureLevel.DEVICE_IDENTIFIER, BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME },
+                { BrickletThermocoupleV2.DEVICE_IDENTIFIER, BrickletThermocoupleV2.DEVICE_DISPLAY_NAME },
+                { BrickletAnalogInV3.DEVICE_IDENTIFIER, BrickletAnalogInV3.DEVICE_DISPLAY_NAME }
             };
         }
     }

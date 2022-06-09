@@ -21,21 +21,23 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public GPSV2SDateTimeStatusLedConfig StatusLed { get; set; } = GPSV2SDateTimeStatusLedConfig.ShowStatus;
 
+        public object deviceLock = new object();
+
         public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                var device = new BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
-                    device.SetStatusLEDConfig((byte)StatusLed);
+                    device.SetStatusLEDConfig((byte)StatusLed); 
                     device.SetSBASConfig((byte)SBAS);
                     device.SetDateTimeCallbackPeriod(Period);
                 };
 
                 return Observable.Create<DataFrame>(observer =>
                 {
-                    global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
+                    BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
                     {
                         observer.OnNext(new DataFrame(date, time));
                     };
@@ -65,16 +67,16 @@ namespace Bonsai.Tinkerforge
 
         public enum SBASConfig : byte
         {
-            Enabled = global::Tinkerforge.BrickletGPSV2.SBAS_ENABLED,
-            Disabled = global::Tinkerforge.BrickletGPSV2.SBAS_DISABLED,
+            Enabled = BrickletGPSV2.SBAS_ENABLED,
+            Disabled = BrickletGPSV2.SBAS_DISABLED,
         }
 
         public enum GPSV2SDateTimeStatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletGPSV2.STATUS_LED_CONFIG_OFF,
+            On = BrickletGPSV2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletGPSV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletGPSV2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

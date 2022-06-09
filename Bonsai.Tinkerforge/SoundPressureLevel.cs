@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures sound pressure level (decibels) and spectrum from a Sound Pressure Level Bricklet.")]
-    public class BrickletSoundPressureLevel : Combinator<IPConnection, int>
+    public class SoundPressureLevel : Combinator<IPConnection, int>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -30,7 +30,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream((Func<IPConnection, IObservable<int>>)(connection =>
             {
-                var device = new global::Tinkerforge.BrickletSoundPressureLevel(Uid, connection);
+                var device = new BrickletSoundPressureLevel(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -40,7 +40,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<int>(observer =>
                 {
-                    global::Tinkerforge.BrickletSoundPressureLevel.DecibelEventHandler handler = (global::Tinkerforge.BrickletSoundPressureLevel sender, int decibel) =>
+                    BrickletSoundPressureLevel.DecibelEventHandler handler = (BrickletSoundPressureLevel sender, int decibel) =>
                     {
                         observer.OnNext(decibel);
                     };
@@ -58,28 +58,28 @@ namespace Bonsai.Tinkerforge
 
         public enum FftSizeConfig : byte
         {
-            FftSize128 = global::Tinkerforge.BrickletSoundPressureLevel.FFT_SIZE_128,
-            FftSize256 = global::Tinkerforge.BrickletSoundPressureLevel.FFT_SIZE_256,
-            FftSize512 = global::Tinkerforge.BrickletSoundPressureLevel.FFT_SIZE_512,
-            FftSize1024 = global::Tinkerforge.BrickletSoundPressureLevel.FFT_SIZE_1024,
+            FftSize128 = BrickletSoundPressureLevel.FFT_SIZE_128,
+            FftSize256 = BrickletSoundPressureLevel.FFT_SIZE_256,
+            FftSize512 = BrickletSoundPressureLevel.FFT_SIZE_512,
+            FftSize1024 = BrickletSoundPressureLevel.FFT_SIZE_1024,
         }
 
         public enum WeightingFunction : byte
         {
-            WeightingA = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_A,
-            WeightingB = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_B,
-            WeightingC = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_C,
-            WeightingD = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_D,
-            WeightingZ = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_Z,
-            WeightingITU = global::Tinkerforge.BrickletSoundPressureLevel.WEIGHTING_ITU_R_468
+            WeightingA = BrickletSoundPressureLevel.WEIGHTING_A,
+            WeightingB = BrickletSoundPressureLevel.WEIGHTING_B,
+            WeightingC = BrickletSoundPressureLevel.WEIGHTING_C,
+            WeightingD = BrickletSoundPressureLevel.WEIGHTING_D,
+            WeightingZ = BrickletSoundPressureLevel.WEIGHTING_Z,
+            WeightingITU = BrickletSoundPressureLevel.WEIGHTING_ITU_R_468
         }
 
         public enum BrickletSoundPressureStatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletSoundPressureLevel.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletSoundPressureLevel.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletSoundPressureLevel.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletSoundPressureLevel.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletSoundPressureLevel.STATUS_LED_CONFIG_OFF,
+            On = BrickletSoundPressureLevel.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletSoundPressureLevel.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletSoundPressureLevel.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

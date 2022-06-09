@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures coordinates, satellite status, altitude, timestamp, from a GPS Bricklet 2.0.")]
-    public class BrickletGPSV2 : Combinator<IPConnection, Tuple<BrickletGPSV2.CoordinateData, BrickletGPSV2.StatusData, BrickletGPSV2.AltitudeData, BrickletGPSV2.DateTimeData>>
+    public class GPSV2 : Combinator<IPConnection, Tuple<GPSV2.CoordinateData, GPSV2.StatusData, GPSV2.AltitudeData, GPSV2.DateTimeData>>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -28,7 +28,7 @@ namespace Bonsai.Tinkerforge
             // Coordinate stream
             IObservable<CoordinateData> coordinateStream = source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                var device = new BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -40,7 +40,7 @@ namespace Bonsai.Tinkerforge
                 {
                     observer.OnNext(new CoordinateData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
 
-                    global::Tinkerforge.BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
+                    BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
                     {
                         observer.OnNext(new CoordinateData(latitude, longitude, ns, ew));
                     };
@@ -58,7 +58,7 @@ namespace Bonsai.Tinkerforge
             // Status stream
             IObservable<StatusData> statusStream = source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                var device = new BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusCallbackPeriod(Period);
@@ -68,7 +68,7 @@ namespace Bonsai.Tinkerforge
                 {
                     observer.OnNext(new StatusData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
 
-                    global::Tinkerforge.BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>
+                    BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>
                     {
                         observer.OnNext(new StatusData(hasFix, satelliteView));
                     };
@@ -86,7 +86,7 @@ namespace Bonsai.Tinkerforge
             // Altitude stream
             IObservable<AltitudeData> altitudeStream = source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                var device = new BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetAltitudeCallbackPeriod(Period);
@@ -96,7 +96,7 @@ namespace Bonsai.Tinkerforge
                 {
                     observer.OnNext(new AltitudeData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
 
-                    global::Tinkerforge.BrickletGPSV2.AltitudeEventHandler handler = (sender, altitude, geoidalSeparation) =>
+                    BrickletGPSV2.AltitudeEventHandler handler = (sender, altitude, geoidalSeparation) =>
                     {
                         observer.OnNext(new AltitudeData(altitude, geoidalSeparation));
                     };
@@ -114,7 +114,7 @@ namespace Bonsai.Tinkerforge
             // DateTime stream
             IObservable<DateTimeData> dateTimeStream = source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                var device = new BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetDateTimeCallbackPeriod(Period);
@@ -124,7 +124,7 @@ namespace Bonsai.Tinkerforge
                 {
                     observer.OnNext(new DateTimeData()); // Initialize an empty data struct in case one of the data providers doesn't return anything to the stream combination
 
-                    global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
+                    BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
                     {
                         observer.OnNext(new DateTimeData(date, time));
                     };
@@ -196,16 +196,16 @@ namespace Bonsai.Tinkerforge
 
         public enum SBASConfig : byte
         {
-            Enabled = global::Tinkerforge.BrickletGPSV2.SBAS_ENABLED,
-            Disabled = global::Tinkerforge.BrickletGPSV2.SBAS_DISABLED,
+            Enabled = BrickletGPSV2.SBAS_ENABLED,
+            Disabled = BrickletGPSV2.SBAS_DISABLED,
         }
 
         public enum BrickletGPSV2StatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletGPSV2.STATUS_LED_CONFIG_OFF,
+            On = BrickletGPSV2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletGPSV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletGPSV2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

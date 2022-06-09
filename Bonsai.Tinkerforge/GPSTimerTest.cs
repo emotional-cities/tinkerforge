@@ -26,7 +26,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletGPSV2(Uid, connection);
+                var device = new BrickletGPSV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -36,7 +36,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<DateTimeData>(observer =>
                 {
-                    global::Tinkerforge.BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
+                    BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
                     {
                         observer.OnNext(new DateTimeData(date, time));
                     };
@@ -107,15 +107,15 @@ namespace Bonsai.Tinkerforge
 
     public enum SBASConfig : byte
     {
-        Enabled = global::Tinkerforge.BrickletGPSV2.SBAS_ENABLED,
-        Disabled = global::Tinkerforge.BrickletGPSV2.SBAS_DISABLED,
+        Enabled = BrickletGPSV2.SBAS_ENABLED,
+        Disabled = BrickletGPSV2.SBAS_DISABLED,
     }
 
     public enum BrickletGPSV2StatusLedConfig : byte
     {
-        Off = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_OFF,
-        On = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_ON,
-        ShowHeartbeat = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-        ShowStatus = global::Tinkerforge.BrickletGPSV2.STATUS_LED_CONFIG_SHOW_STATUS
+        Off = BrickletGPSV2.STATUS_LED_CONFIG_OFF,
+        On = BrickletGPSV2.STATUS_LED_CONFIG_ON,
+        ShowHeartbeat = BrickletGPSV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+        ShowStatus = BrickletGPSV2.STATUS_LED_CONFIG_SHOW_STATUS
     }
 }

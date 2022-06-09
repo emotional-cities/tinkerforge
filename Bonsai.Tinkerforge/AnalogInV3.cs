@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures analog signal from an Analog In Bricklet 3.0.")]
-    public class BrickletAnalogInV3 : Combinator<IPConnection, int>
+    public class AnalogInV3 : Combinator<IPConnection, int>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -24,7 +24,7 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletAnalogInV3(Uid, connection);
+                var device = new BrickletAnalogInV3(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -33,7 +33,7 @@ namespace Bonsai.Tinkerforge
 
                 return Observable.Create<int>(observer =>
                 {
-                    global::Tinkerforge.BrickletAnalogInV3.VoltageEventHandler handler = (sender, voltage) =>
+                    BrickletAnalogInV3.VoltageEventHandler handler = (sender, voltage) =>
                     {
                         observer.OnNext(voltage);
                     };
@@ -51,10 +51,10 @@ namespace Bonsai.Tinkerforge
 
         public enum BrickletAnalogInV3LedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
+            On = BrickletHumidityV2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }
