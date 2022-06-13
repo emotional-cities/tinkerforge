@@ -3,13 +3,13 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using Tinkerforge;
+using System.Threading.Tasks;
 
 namespace Bonsai.Tinkerforge
 {
-    [Combinator(MethodName = nameof(Generate))]
     [DefaultProperty(nameof(Uid))]
     [Description("Writes an analog output signal (int x.xxx, 3300 = 3.3V, 0-12V range) to an Analog OUT Bricklet 3.0.")]
-    public class AnalogOutV3
+    public class AnalogOutV3 : Combinator<IPConnection, BrickletAnalogOutV3>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -26,7 +26,8 @@ namespace Bonsai.Tinkerforge
             return BrickletAnalogOutV3.DEVICE_DISPLAY_NAME;
         }
 
-        public IObservable<int> Generate(IObservable<IPConnection> source, IObservable<int> signal) {
+        public override IObservable<BrickletAnalogOutV3> Process(IObservable<IPConnection> source)
+        {
             return source.SelectStream(connection =>
             {
                 var device = new BrickletAnalogOutV3(Uid, connection);
@@ -35,9 +36,14 @@ namespace Bonsai.Tinkerforge
                     device.SetStatusLEDConfig((byte)StatusLed);
                 };
 
-                return signal.Do(value =>
+                return Observable.Create<BrickletAnalogOutV3>(observer =>
                 {
-                    device.SetOutputVoltage(value);
+                    observer.OnNext(device);
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetStatusLEDConfig(0); }
+                        catch (NotConnectedException) { }
+                    });
                 });
             });
         }
