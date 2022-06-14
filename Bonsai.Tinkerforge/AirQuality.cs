@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measure IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet.")]
-    public class AirQuality : Combinator<IPConnection, AirQuality.DataFrame>
+    public class AirQuality : Combinator<IPConnection, AirQuality.AirQualityDataFrame>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("The unique bricklet device UID.")]
@@ -31,7 +31,7 @@ namespace Bonsai.Tinkerforge
             return BrickletAirQuality.DEVICE_DISPLAY_NAME;
         }
 
-        public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
+        public override IObservable<AirQualityDataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
@@ -43,11 +43,11 @@ namespace Bonsai.Tinkerforge
                     device.SetAllValuesCallbackConfiguration(Period, false);
                 };
 
-                return Observable.Create<DataFrame>(observer =>
+                return Observable.Create<AirQualityDataFrame>(observer =>
                 {
                     BrickletAirQuality.AllValuesEventHandler handler = (sender, iaqIndex, iaqAccuracy, temperature, humidity, airPressure) =>
                     {
-                        observer.OnNext(new DataFrame(iaqIndex, iaqAccuracy, temperature, humidity, airPressure));
+                        observer.OnNext(new AirQualityDataFrame(iaqIndex, iaqAccuracy, temperature, humidity, airPressure));
                     };
 
                     device.AllValuesCallback += handler;
@@ -61,7 +61,7 @@ namespace Bonsai.Tinkerforge
             });
         }
 
-        public struct DataFrame
+        public struct AirQualityDataFrame
         {
             public int IaqIndex; 
             public byte IaqIndexAccuracy;
@@ -69,7 +69,7 @@ namespace Bonsai.Tinkerforge
             public int Humidity;
             public int AirPressure;
 
-            public DataFrame(int iaqIndex, byte iaqAccuracy, int temperature, int humidity, int airPressure)
+            public AirQualityDataFrame(int iaqIndex, byte iaqAccuracy, int temperature, int humidity, int airPressure)
             {
                 IaqIndex = iaqIndex; 
                 IaqIndexAccuracy = iaqAccuracy;
