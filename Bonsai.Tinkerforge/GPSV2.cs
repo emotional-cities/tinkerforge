@@ -20,6 +20,18 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletGPSV2StatusLedConfig StatusLed { get; set; } = BrickletGPSV2StatusLedConfig.ShowStatus;
 
+        [Description("Specifies the period between datetime sample event callbacks. A value of zero disables event reporting.")]
+        public long DateTimePeriod { get; set; } = 1000;
+
+        [Description("Specifies the period between altitude sample event callbacks. A value of zero disables event reporting.")]
+        public long AltitudePeriod { get; set; } = 1000;
+
+        [Description("Specifies the period between coordinate sample event callbacks. A value of zero disables event reporting.")]
+        public long CoordinatePeriod { get; set; } = 1000;
+
+        [Description("Specifies the period between status sample event callbacks. A value of zero disables event reporting.")]
+        public long StatusPeriod { get; set; } = 1000;
+
         public override string ToString()
         {
             return BrickletGPSV2.DEVICE_DISPLAY_NAME;
@@ -34,6 +46,10 @@ namespace Bonsai.Tinkerforge
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetSBASConfig((byte)SBAS);
+                    device.SetDateTimeCallbackPeriod(DateTimePeriod);
+                    device.SetAltitudeCallbackPeriod(AltitudePeriod);
+                    device.SetCoordinatesCallbackPeriod(CoordinatePeriod);
+                    device.SetStatusCallbackPeriod(StatusPeriod);
                 };
 
                 return Observable.Create<BrickletGPSV2>(observer =>

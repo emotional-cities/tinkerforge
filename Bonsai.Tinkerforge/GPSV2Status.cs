@@ -6,18 +6,13 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [DefaultProperty(nameof(Period))]
     [Description("Generates a status data stream from a GPSV2 device.")]
     public class GPSV2Status : Combinator<BrickletGPSV2, GPSV2Status.StatusData>
     {
-        [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
-        public long Period { get; set; } = 1000;
-
         public override IObservable<StatusData> Process(IObservable<BrickletGPSV2> source)
         {
             return source.SelectStream(device =>
             {
-                device.SetStatusCallbackPeriod(Period);
                 return Observable.Create<StatusData>(observer =>
                 {
                     BrickletGPSV2.StatusEventHandler handler = (sender, hasFix, satelliteView) =>

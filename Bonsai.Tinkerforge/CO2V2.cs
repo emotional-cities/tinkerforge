@@ -8,7 +8,7 @@ namespace Bonsai.Tinkerforge
 {
     [DefaultProperty(nameof(Uid))]
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
-    public class CO2V2 : Combinator<IPConnection, CO2V2.DataFrame>
+    public class CO2V2 : Combinator<IPConnection, CO2V2.Co2DataFrame>
     {
         [TypeConverter(typeof(UidConverter))]
         [Description("Device data including address UID.")]
@@ -31,7 +31,7 @@ namespace Bonsai.Tinkerforge
             return BrickletCO2V2.DEVICE_DISPLAY_NAME;
         }
 
-        public override IObservable<DataFrame> Process(IObservable<IPConnection> source)
+        public override IObservable<Co2DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
@@ -44,11 +44,11 @@ namespace Bonsai.Tinkerforge
                     device.SetAllValuesCallbackConfiguration(Period, false);
                 };
 
-                return Observable.Create<DataFrame>(observer =>
+                return Observable.Create<Co2DataFrame>(observer =>
                 {
                     BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
                     {
-                        observer.OnNext(new DataFrame(co2Concentration, temperature, humidity));
+                        observer.OnNext(new Co2DataFrame(co2Concentration, temperature, humidity));
                     };
 
                     device.AllValuesCallback += handler;
@@ -62,13 +62,13 @@ namespace Bonsai.Tinkerforge
             });
         }
 
-        public struct DataFrame
+        public struct Co2DataFrame
         {
             public int Co2Concentration;
             public short Temperature;
             public int Humidity;
 
-            public DataFrame(int co2Concentration, short temperature, int humidity)
+            public Co2DataFrame(int co2Concentration, short temperature, int humidity)
             {
                 Co2Concentration = co2Concentration;
                 Temperature = temperature;
