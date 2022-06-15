@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using Tinkerforge;
-using System.Threading.Tasks;
 
 namespace Bonsai.Tinkerforge
 {

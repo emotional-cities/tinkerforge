@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
+using System.Reactive.Disposables;
 using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [Combinator(MethodName = nameof(Generate))]
+    [Combinator]
     [Description("Writes an analog output signal (int x.xxx, 3300 = 3.3V, 0-10V range) to an Industrial Analog OUT Bricklet 2.0.")]
     public class IndustrialAnalogOutV2
     {
@@ -34,28 +35,43 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletIndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = BrickletIndustrialAnalogOutV2StatusLedConfig.ShowStatus;
 
+        [Description("Sets the initial voltage on initialisation. If a negative value is provided the voltage will not be changed on initialisation.")]
+        public int InitialVoltage { get; set; } = 0;
+
         public override string ToString()
         {
             return BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME;
         }
 
-        public IObservable<int> Generate(IObservable<IPConnection> source, IObservable<int> signal)
+        public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
         {
-            return source.SelectStream(connection =>
+            var deviceStream = source.SelectStream(connection =>
             {
                 var device = new BrickletIndustrialAnalogOutV2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
-                    device.SetOutLEDConfig((byte)OutLed);
-                    device.SetOutLEDStatusConfig(OutLedStatusMin, OutLedStatusMax, (byte)OutLedStatus);
+                    if (InitialVoltage >= 0)
+                        device.SetVoltage(InitialVoltage);
                 };
 
-                return signal.Do(value =>
+                return Observable.Create<BrickletIndustrialAnalogOutV2>(observer =>
                 {
-                    device.SetVoltage(value);
+                    observer.OnNext(device);
+                    return Disposable.Create(() =>
+                    {
+                        try { device.SetStatusLEDConfig(0); }
+                        catch (NotConnectedException) { }
+                    });
                 });
             });
+
+            return deviceStream.CombineLatest(signal, (x, y) => {
+                try { x.SetVoltage(y); }
+                catch { }
+                return y;
+            }
+            );
         }
 
         public enum VoltageRangeConfig : byte
