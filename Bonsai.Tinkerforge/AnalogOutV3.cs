@@ -16,7 +16,7 @@ namespace Bonsai.Tinkerforge
         [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
-        [Description("Sets the initial voltage on initialisation. If a negative value is provided the voltage will not be changed on initialisation")]
+        [Description("Sets the initial voltage on initialisation. If a negative value is provided the voltage will not be changed on initialisation.")]
         public int InitialVoltage { get; set; } = 0;
 
         [Description("Specifies the behavior of the status LED.")]
