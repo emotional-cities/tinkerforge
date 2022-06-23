@@ -36,26 +36,29 @@ namespace Bonsai.Tinkerforge
         public BrickletIndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = BrickletIndustrialAnalogOutV2StatusLedConfig.ShowStatus;
 
         [Description("Sets the initial voltage on initialisation. If a negative value is provided the voltage will not be changed on initialisation.")]
-        public int InitialVoltage { get; set; } = 0;
+        public int? InitialVoltage { get; set; };
 
         public override string ToString()
         {
             return BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME;
         }
 
+        public IObservable<int> Process(IObservable<IPConnection> source)
+        {
+            return Process(source, Observable.Never<int>());
+        }
+
         public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
         {
-            var deviceStream = source.SelectStream(connection =>
+            return source.SelectStream(connection =>
             {
-                var device = new BrickletIndustrialAnalogOutV2(Uid, connection);
+                var device = new BrickletAnalogOutV3(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
-                    if (InitialVoltage >= 0)
-                        device.SetVoltage(InitialVoltage);
                 };
 
-                return Observable.Create<BrickletIndustrialAnalogOutV2>(observer =>
+                return Observable.Create<BrickletAnalogOutV3>(observer =>
                 {
                     observer.OnNext(device);
                     return Disposable.Create(() =>
@@ -64,14 +67,16 @@ namespace Bonsai.Tinkerforge
                         catch (NotConnectedException) { }
                     });
                 });
+            }).SelectMany(device =>
+            {
+                var voltage = signal;
+                var initialVoltage = InitialVoltage;
+                if (initialVoltage.HasValue)
+                {
+                    voltage = Observable.Return(initialVoltage.Value).Concat(signal);
+                }
+                return voltage.Do(device.SetOutputVoltage);
             });
-
-            return deviceStream.CombineLatest(signal, (x, y) => {
-                try { x.SetVoltage(y); }
-                catch { }
-                return y;
-            }
-            );
         }
 
         public enum VoltageRangeConfig : byte
