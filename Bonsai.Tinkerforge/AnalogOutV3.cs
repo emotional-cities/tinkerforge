@@ -26,9 +26,9 @@ namespace Bonsai.Tinkerforge
             return BrickletAnalogOutV3.DEVICE_DISPLAY_NAME;
         }
 
-        public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
+        public IObservable<int> Process(IObservable<int> signal, IObservable<IPConnection> source)
         {
-            var deviceStream = source.SelectStream(connection =>
+            return source.SelectStream(connection =>
             {
                 var device = new BrickletAnalogOutV3(Uid, connection);
                 connection.Connected += (sender, e) =>
@@ -47,13 +47,13 @@ namespace Bonsai.Tinkerforge
                         catch (NotConnectedException) { }
                     });
                 });
-            });
+            }).SelectMany(device => signal.Do(x => device.SetOutputVoltage(x)));
 
-            return deviceStream.CombineLatest(signal, (x, y) => {
-                try { x.SetOutputVoltage(y); }
-                catch { }
-                return y; }
-            );
+            //return deviceStream.CombineLatest(signal, (x, y) => {
+            //    try { x.SetOutputVoltage(y); }
+            //    catch { }
+            //    return y; }
+            //);
         }
 
         public enum BrickletAnalogOutV3LedConfig : byte
