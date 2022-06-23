@@ -27,20 +27,28 @@ namespace Bonsai.Tinkerforge
         // From display string --> Uid string
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            var text = value as string;
-            return text != null
-                ? text.Split(':')[1]
-                : base.ConvertFrom(context, culture, value);
+            if (value is string text && !string.IsNullOrEmpty(text))
+            {
+                var descriptorParts = text.Split(':');
+                return descriptorParts[descriptorParts.Length - 1];
+            }
+            
+            return base.ConvertFrom(context, culture, value);
         }
 
         // From Uid string --> display string
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (devices == null) LookupDevices(context);
-            var text = value as string;
-            return destinationType == typeof(string) && text != null
-                ? devices[text].ToString()
-                : base.ConvertTo(context, culture, value, destinationType);
+            if (destinationType == typeof(string) &&
+                value is string text &&
+                devices != null &&
+                devices.TryGetValue(text, out DeviceData deviceData))
+            {
+                return deviceData.ToString();
+
+            }
+
+            return base.ConvertTo(context, culture, value, destinationType);
         }
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
@@ -72,7 +80,8 @@ namespace Bonsai.Tinkerforge
                     {
                         var ipcon = new IPConnection();
                         ipcon.EnumerateCallback += EnumerateConnection;
-                        ipcon.Connect(connectionID.HostName, connectionID.Port);
+                        try { ipcon.Connect(connectionID.HostName, connectionID.Port); }
+                        catch { continue; } // Best effort. If there is a connection problem, just keep going.
                         ipcon.Enumerate();
                         /// N.B. GetStandardValues is called twice by Windows Forms. Once to check the dropdown list and then again
                         /// to check cursor position in the list. This is annoying here because it means the enumerate thread will
