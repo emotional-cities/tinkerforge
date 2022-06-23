@@ -5,9 +5,10 @@
     <Title>Bonsai - Tinkerforge Library</Title>
     <Description>Bonsai Library containing interfaces for data acquisition and control using Tinkerforge devices.</Description>
     <Copyright>Copyright © NeuroGEARS Ltd 2022</Copyright>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://github.com/emotional-cities/tinkerforge</PackageProjectUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIconUrl>https://bonsai-rx.org/assets/images/bonsai.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <IncludeSymbols Condition="'$(Configuration)'=='Release'">true</IncludeSymbols>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
     <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
@@ -24,6 +25,7 @@
 	
   <ItemGroup>
     <Content Include="..\LICENSE" PackagePath="/" />
+    <Content Include="..\icon.png" PackagePath="/" />
   </ItemGroup>
 
 </Project>
