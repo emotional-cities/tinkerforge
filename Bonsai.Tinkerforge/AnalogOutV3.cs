@@ -16,7 +16,7 @@ namespace Bonsai.Tinkerforge
         public string Uid { get; set; }
 
         [Description("Sets the initial voltage on initialisation. If a negative value is provided the voltage will not be changed on initialisation.")]
-        public int InitialVoltage { get; set; } = 0;
+        public int? InitialVoltage { get; set; }
 
         [Description("Specifies the behavior of the status LED.")]
         public BrickletAnalogOutV3LedConfig StatusLed { get; set; } = BrickletAnalogOutV3LedConfig.ShowStatus;
@@ -26,7 +26,12 @@ namespace Bonsai.Tinkerforge
             return BrickletAnalogOutV3.DEVICE_DISPLAY_NAME;
         }
 
-        public IObservable<int> Process(IObservable<int> signal, IObservable<IPConnection> source)
+        public IObservable<int> Process(IObservable<IPConnection> source)
+        {
+            return Process(source, Observable.Never<int>());
+        }
+
+        public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
         {
             return source.SelectStream(connection =>
             {
@@ -34,8 +39,6 @@ namespace Bonsai.Tinkerforge
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
-                    if (InitialVoltage >= 0)
-                        device.SetOutputVoltage(InitialVoltage);
                 };
 
                 return Observable.Create<BrickletAnalogOutV3>(observer =>
@@ -47,13 +50,16 @@ namespace Bonsai.Tinkerforge
                         catch (NotConnectedException) { }
                     });
                 });
-            }).SelectMany(device => signal.Do(x => device.SetOutputVoltage(x)));
-
-            //return deviceStream.CombineLatest(signal, (x, y) => {
-            //    try { x.SetOutputVoltage(y); }
-            //    catch { }
-            //    return y; }
-            //);
+            }).SelectMany(device =>
+            {
+                var voltage = signal;
+                var initialVoltage = InitialVoltage;
+                if (initialVoltage.HasValue)
+                {
+                    voltage = Observable.Return(initialVoltage.Value).Concat(signal);
+                }
+                return voltage.Do(device.SetOutputVoltage);
+            });
         }
 
         public enum BrickletAnalogOutV3LedConfig : byte
