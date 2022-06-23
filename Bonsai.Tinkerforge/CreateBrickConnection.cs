@@ -9,7 +9,7 @@ namespace Bonsai.Tinkerforge
     [Combinator(MethodName = nameof(Generate))]
     [WorkflowElementCategory(ElementCategory.Source)]
     [Description("Creates a TCP/IP connection to the Brick Daemon.")]
-    public class CreateIPConnection
+    public class CreateBrickConnection
     {
         internal const string DefaultHostName = "localhost";
         internal const int DefaultPort = 4223;

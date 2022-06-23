@@ -6,13 +6,12 @@ using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
-    [Combinator]
-    [DefaultProperty(nameof(Device))]
+    [DefaultProperty(nameof(Uid))]
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
-    public class BrickletCO2V2
+    public class CO2V2 : Combinator<IPConnection, CO2V2.Co2DataFrame>
     {
-        [Description("Device data including address UID.")]
         [TypeConverter(typeof(UidConverter))]
+        [Description("Device data including address UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
@@ -25,13 +24,18 @@ namespace Bonsai.Tinkerforge
         public int TemperatureOffset { get; set; }
 
         [Description("Specifies the behavior of the status LED.")]
-        public CO2V2StatusLedConfig StatusLed { get; set; } = CO2V2StatusLedConfig.ShowStatus;
+        public BrickletCO2V2StatusLedConfig StatusLed { get; set; } = BrickletCO2V2StatusLedConfig.ShowStatus;
 
-        public IObservable<DataFrame> Process(IObservable<IPConnection> source)
+        public override string ToString()
+        {
+            return BrickletCO2V2.DEVICE_DISPLAY_NAME;
+        }
+
+        public override IObservable<Co2DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
-                var device = new global::Tinkerforge.BrickletCO2V2(Uid, connection);
+                var device = new BrickletCO2V2(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
@@ -40,11 +44,11 @@ namespace Bonsai.Tinkerforge
                     device.SetAllValuesCallbackConfiguration(Period, false);
                 };
 
-                return Observable.Create<DataFrame>(observer =>
+                return Observable.Create<Co2DataFrame>(observer =>
                 {
-                    global::Tinkerforge.BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
+                    BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
                     {
-                        observer.OnNext(new DataFrame(co2Concentration, temperature, humidity));
+                        observer.OnNext(new Co2DataFrame(co2Concentration, temperature, humidity));
                     };
 
                     device.AllValuesCallback += handler;
@@ -58,13 +62,13 @@ namespace Bonsai.Tinkerforge
             });
         }
 
-        public struct DataFrame
+        public struct Co2DataFrame
         {
             public int Co2Concentration;
             public short Temperature;
             public int Humidity;
 
-            public DataFrame(int co2Concentration, short temperature, int humidity)
+            public Co2DataFrame(int co2Concentration, short temperature, int humidity)
             {
                 Co2Concentration = co2Concentration;
                 Temperature = temperature;
@@ -72,12 +76,12 @@ namespace Bonsai.Tinkerforge
             }
         }
 
-        public enum CO2V2StatusLedConfig : byte
+        public enum BrickletCO2V2StatusLedConfig : byte
         {
-            Off = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_OFF,
-            On = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_ON,
-            ShowHeartbeat = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-            ShowStatus = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
+            Off = BrickletCO2V2.STATUS_LED_CONFIG_OFF,
+            On = BrickletCO2V2.STATUS_LED_CONFIG_ON,
+            ShowHeartbeat = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+            ShowStatus = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Bonsai.Tinkerforge
     internal class UidConverter : StringConverter
     {
         // Cache for discovered Brick / Bricklet devices
-        public Dictionary<string, DeviceData> devices;
+        private Dictionary<string, DeviceData> devices;
 
         public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
         {
@@ -27,20 +27,28 @@ namespace Bonsai.Tinkerforge
         // From display string --> Uid string
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            var text = value as string;
-            return text != null
-                ? text.Split(':')[1]
-                : base.ConvertFrom(context, culture, value);
+            if (value is string text && !string.IsNullOrEmpty(text))
+            {
+                var descriptorParts = text.Split(':');
+                return descriptorParts[descriptorParts.Length - 1];
+            }
+            
+            return base.ConvertFrom(context, culture, value);
         }
 
         // From Uid string --> display string
         public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
         {
-            if (devices == null) LookupDevices(context);
-            var text = value as string;
-            return destinationType == typeof(string) && text != null
-                ? devices[text].ToString()
-                : base.ConvertTo(context, culture, value, destinationType);
+            if (destinationType == typeof(string) &&
+                value is string text &&
+                devices != null &&
+                devices.TryGetValue(text, out DeviceData deviceData))
+            {
+                return deviceData.ToString();
+
+            }
+
+            return base.ConvertTo(context, culture, value, destinationType);
         }
 
         public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
@@ -61,7 +69,7 @@ namespace Bonsai.Tinkerforge
                 if (workflowBuilder != null)
                 {
                     var connectionIDs = (from builder in workflowBuilder.Workflow.Descendants()
-                                         let createIP = ExpressionBuilder.GetWorkflowElement(builder) as CreateIPConnection
+                                         let createIP = ExpressionBuilder.GetWorkflowElement(builder) as CreateBrickConnection
                                          where createIP != null
                                          select new ConnectionID { HostName = createIP.HostName, Port = createIP.Port })
                                             .Distinct().ToList();
@@ -72,7 +80,8 @@ namespace Bonsai.Tinkerforge
                     {
                         var ipcon = new IPConnection();
                         ipcon.EnumerateCallback += EnumerateConnection;
-                        ipcon.Connect(connectionID.HostName, connectionID.Port);
+                        try { ipcon.Connect(connectionID.HostName, connectionID.Port); }
+                        catch { continue; } // Best effort. If there is a connection problem, just keep going.
                         ipcon.Enumerate();
                         /// N.B. GetStandardValues is called twice by Windows Forms. Once to check the dropdown list and then again
                         /// to check cursor position in the list. This is annoying here because it means the enumerate thread will
@@ -83,7 +92,12 @@ namespace Bonsai.Tinkerforge
                         ipcon.Disconnect();
                     }
                 }
-                return new StandardValuesCollection(devices.Values.ToList());
+
+                // Return the list of connected devices, filter by those that match the context instance (e.g. if context is AirQuality, only return AirQualityDevices)
+                return new StandardValuesCollection(devices.Values
+                    .Where(dev => TinkerforgeDeviceLookup.Defaults[dev.DeviceIdentifier] == context.Instance.ToString())
+                    .ToList()
+                );
             }
 
             return base.GetStandardValues(context);
@@ -106,6 +120,50 @@ namespace Bonsai.Tinkerforge
             {
                 return $"{HostName}:{Port}";
             }
+        }
+
+        // Data representation of a connected TinkerForge module
+        internal class DeviceData
+        {
+            public string Uid; // Unique module ID
+            public string ConnectedUid; // IDs of connected modules
+            public char Position; // Position in the network
+            public int DeviceIdentifier; // Number corresponding to device name
+
+            public DeviceData(string uid, string connectedUid, char position, int deviceIdentifier)
+            {
+                Uid = uid;
+                ConnectedUid = connectedUid;
+                Position = position;
+                DeviceIdentifier = deviceIdentifier;
+            }
+
+            public override string ToString()
+            {
+                return $"{TinkerforgeDeviceLookup.Defaults[DeviceIdentifier]}:{Uid}";
+            }
+        }
+
+        // Tinkerforge modules have a standard int->Name lookup
+        internal class TinkerforgeDeviceLookup
+        {
+            public static readonly Dictionary<int, string> Defaults = new Dictionary<int, string>
+            {
+                { BrickMaster.DEVICE_IDENTIFIER,  BrickMaster.DEVICE_DISPLAY_NAME},
+                { BrickletAmbientLightV3.DEVICE_IDENTIFIER,  BrickletAmbientLightV3.DEVICE_DISPLAY_NAME},
+                { BrickletCO2V2.DEVICE_IDENTIFIER, BrickletCO2V2.DEVICE_DISPLAY_NAME },
+                { BrickletAccelerometer.DEVICE_IDENTIFIER, BrickletAccelerometer.DEVICE_DISPLAY_NAME },
+                { BrickletAirQuality.DEVICE_IDENTIFIER, BrickletAirQuality.DEVICE_DISPLAY_NAME },
+                { BrickletGPSV2.DEVICE_IDENTIFIER, BrickletGPSV2.DEVICE_DISPLAY_NAME },
+                { BrickletHumidityV2.DEVICE_IDENTIFIER, BrickletHumidityV2.DEVICE_DISPLAY_NAME },
+                { BrickletIndustrialAnalogOutV2.DEVICE_IDENTIFIER, BrickletIndustrialAnalogOutV2.DEVICE_DISPLAY_NAME },
+                { BrickletIndustrialPTC.DEVICE_IDENTIFIER, BrickletIndustrialPTC.DEVICE_DISPLAY_NAME },
+                { BrickletParticulateMatter.DEVICE_IDENTIFIER, BrickletParticulateMatter.DEVICE_DISPLAY_NAME },
+                { BrickletSoundPressureLevel.DEVICE_IDENTIFIER, BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME },
+                { BrickletThermocoupleV2.DEVICE_IDENTIFIER, BrickletThermocoupleV2.DEVICE_DISPLAY_NAME },
+                { BrickletAnalogInV3.DEVICE_IDENTIFIER, BrickletAnalogInV3.DEVICE_DISPLAY_NAME },
+                { BrickletAnalogOutV3.DEVICE_IDENTIFIER, BrickletAnalogOutV3.DEVICE_DISPLAY_NAME }
+            };
         }
     }
 }
