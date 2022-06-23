@@ -35,7 +35,7 @@ namespace Bonsai.Tinkerforge
         [Description("Specifies the behavior of the status LED.")]
         public BrickletIndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = BrickletIndustrialAnalogOutV2StatusLedConfig.ShowStatus;
 
-        [Description("Sets the initial voltage on initialisation. If a negative value is provided the voltage will not be changed on initialisation.")]
+        [Description("Sets the initial voltage on initialisation. If a value is not provided the voltage will not be changed on initialisation.")]
         public int? InitialVoltage { get; set; }
 
         public override string ToString()
