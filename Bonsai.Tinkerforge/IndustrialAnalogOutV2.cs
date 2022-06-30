@@ -11,7 +11,7 @@ namespace Bonsai.Tinkerforge
     public class IndustrialAnalogOutV2
     {
         [TypeConverter(typeof(UidConverter))]
-        [Description("The unique bricklet device UID.")]
+        [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the output voltage range.")]

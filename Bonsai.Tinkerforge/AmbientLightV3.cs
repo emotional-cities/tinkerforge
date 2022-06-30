@@ -11,7 +11,7 @@ namespace Bonsai.Tinkerforge
     public class AmbientLightV3 : Combinator<IPConnection, long>
     {
         [TypeConverter(typeof(UidConverter))]
-        [Description("Device data including address UID.")]
+        [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]

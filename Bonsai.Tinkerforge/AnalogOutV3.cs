@@ -12,7 +12,7 @@ namespace Bonsai.Tinkerforge
     public class AnalogOutV3
     {
         [TypeConverter(typeof(UidConverter))]
-        [Description("The unique bricklet device UID.")]
+        [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Sets the initial voltage on initialisation. If a value is not provided the voltage will not be changed on initialisation.")]

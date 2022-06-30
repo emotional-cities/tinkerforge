@@ -11,7 +11,7 @@ namespace Bonsai.Tinkerforge
     public class GPSV2 : Combinator<IPConnection, BrickletGPSV2>
     {
         [TypeConverter(typeof(UidConverter))]
-        [Description("The unique bricklet device UID.")]
+        [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("If SBAS (Satellite-based Augmentation System) is enabled, the position accuracy increases (if SBAS satellites are in view), but the update rate is limited to 5Hz. With SBAS disabled the update rate is increased to 10Hz.")]
