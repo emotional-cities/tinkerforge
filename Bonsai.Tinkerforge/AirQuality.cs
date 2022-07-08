@@ -61,7 +61,7 @@ namespace Bonsai.Tinkerforge
         /// <param name="source">
         /// A sequence containing the TCP/IP connection to the Brick Daemon.
         /// </param>
-        /// <returns>
+        /// <returns>the 
         /// A sequence of <see cref="AirQualityDataFrame"/> objects representing the
         /// measurements from the Air Quality Bricklet.
         /// </returns>
