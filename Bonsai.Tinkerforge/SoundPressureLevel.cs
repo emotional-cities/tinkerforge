@@ -100,22 +100,26 @@ namespace Bonsai.Tinkerforge
         public enum FftSizeConfig : byte
         {
             /// <summary>
-            /// Specifies an FFT size of 128 samples, 64 bins, 80 samples per second, each bin has size 320Hz
+            /// Specifies an FFT size of 128 samples, 64 bins, 80 samples per second.
+            /// Each bin has size 320Hz.
             /// </summary>
             FftSize128 = BrickletSoundPressureLevel.FFT_SIZE_128,
 
             /// <summary>
-            /// Specifies an FFT size of 256 samples, 128 bins, 40 samples per second, each bin has size 160Hz
+            /// Specifies an FFT size of 256 samples, 128 bins, 40 samples per second.
+            /// Each bin has size 160Hz.
             /// </summary>
             FftSize256 = BrickletSoundPressureLevel.FFT_SIZE_256,
 
             /// <summary>
-            /// Specifies an FFT size of 512 samples, 256 bins, 20 samples per second, each bin has size 80Hz
+            /// Specifies an FFT size of 512 samples, 256 bins, 20 samples per second.
+            /// Each bin has size 80Hz.
             /// </summary>
             FftSize512 = BrickletSoundPressureLevel.FFT_SIZE_512,
 
             /// <summary>
-            /// Specifies an FFT size of 1024 samples, 512 bins, 10 samples per second, each bin has size 40Hz
+            /// Specifies an FFT size of 1024 samples, 512 bins, 10 samples per second.
+            /// Each bin has size 40Hz.
             /// </summary>
             FftSize1024 = BrickletSoundPressureLevel.FFT_SIZE_1024,
         }

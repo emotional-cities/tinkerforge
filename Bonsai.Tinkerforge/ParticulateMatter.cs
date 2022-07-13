@@ -86,17 +86,17 @@ namespace Bonsai.Tinkerforge
         public struct ParticularMatterDataFrame
         {
             /// <summary>
-            /// Represents the particulate matter concentration of PM10 in units 1ug/m^3
+            /// Represents the particulate matter concentration of PM10 in units 1ug/m^3.
             /// </summary>
             public int Pm10;
 
             /// <summary>
-            /// Represents the particulate matter concentration of PM25 in units 1ug/m^3
+            /// Represents the particulate matter concentration of PM25 in units 1ug/m^3.
             /// </summary>
             public int Pm25;
 
             /// <summary>
-            /// Represents the particulate matter concentration of PM25 in units 1ug/m^3
+            /// Represents the particulate matter concentration of PM25 in units 1ug/m^3.
             /// </summary>
             public int Pm100;
 

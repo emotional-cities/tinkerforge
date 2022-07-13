@@ -94,37 +94,37 @@ namespace Bonsai.Tinkerforge
         public enum IlluminanceRangeConfig : byte
         {
             /// <summary>
-            /// Specifies an illuminance range of 0-64000lux
+            /// Specifies an illuminance range of 0-64000lux.
             /// </summary>
             Range64000Lux = BrickletAmbientLightV3.ILLUMINANCE_RANGE_64000LUX,
 
             /// <summary>
-            /// Specifies an illuminance range of 0-32000lux
+            /// Specifies an illuminance range of 0-32000lux.
             /// </summary>
             Range32000Lux = BrickletAmbientLightV3.ILLUMINANCE_RANGE_32000LUX,
 
             /// <summary>
-            /// Specifies an illuminance range of 0-16000lux
+            /// Specifies an illuminance range of 0-16000lux.
             /// </summary>
             Range16000Lux = BrickletAmbientLightV3.ILLUMINANCE_RANGE_16000LUX,
 
             /// <summary>
-            /// Specifies an illuminance range of 0-8000lux
+            /// Specifies an illuminance range of 0-8000lux.
             /// </summary>
             Range8000Lux = BrickletAmbientLightV3.ILLUMINANCE_RANGE_8000LUX,
 
             /// <summary>
-            /// Specifies an illuminance range of 0-1300lux
+            /// Specifies an illuminance range of 0-1300lux.
             /// </summary>
             Range1300Lux = BrickletAmbientLightV3.ILLUMINANCE_RANGE_1300LUX,
 
             /// <summary>
-            /// Specifies an illuminance range of 0-600lux
+            /// Specifies an illuminance range of 0-600lux.
             /// </summary>
             Range600Lux = BrickletAmbientLightV3.ILLUMINANCE_RANGE_600LUX,
 
             /// <summary>
-            /// Specifies an illuminance range of 0-~100000lux
+            /// Specifies an illuminance range of 0-~100000lux.
             /// </summary>
             RangeUnlimited = BrickletAmbientLightV3.ILLUMINANCE_RANGE_UNLIMITED
         }
@@ -136,42 +136,42 @@ namespace Bonsai.Tinkerforge
         public enum IntegrationTimeConfig : byte
         {
             /// <summary>
-            /// Specifies an integration time of 50ms
+            /// Specifies an integration time of 50ms.
             /// </summary>
             Integration50ms = BrickletAmbientLightV3.INTEGRATION_TIME_50MS,
 
             /// <summary>
-            /// Specifies an integration time of 100ms
+            /// Specifies an integration time of 100ms.
             /// </summary>
             Integration100ms = BrickletAmbientLightV3.INTEGRATION_TIME_100MS,
 
             /// <summary>
-            /// Specifies an integration time of 150ms
+            /// Specifies an integration time of 150ms.
             /// </summary>
             Integration150ms = BrickletAmbientLightV3.INTEGRATION_TIME_150MS,
 
             /// <summary>
-            /// Specifies an integration time of 200ms
+            /// Specifies an integration time of 200ms.
             /// </summary>
             Integration200ms = BrickletAmbientLightV3.INTEGRATION_TIME_200MS,
 
             /// <summary>
-            /// Specifies an integration time of 250ms
+            /// Specifies an integration time of 250ms.
             /// </summary>
             Integration250ms = BrickletAmbientLightV3.INTEGRATION_TIME_250MS,
 
             /// <summary>
-            /// Specifies an integration time of 300ms
+            /// Specifies an integration time of 300ms.
             /// </summary>
             Integration300ms = BrickletAmbientLightV3.INTEGRATION_TIME_300MS,
 
             /// <summary>
-            /// Specifies an integration time of 350ms
+            /// Specifies an integration time of 350ms.
             /// </summary>
             Integration350ms = BrickletAmbientLightV3.INTEGRATION_TIME_350MS,
 
             /// <summary>
-            /// Specifies an integration time of 400ms
+            /// Specifies an integration time of 400ms.
             /// </summary>
             Integration400ms = BrickletAmbientLightV3.INTEGRATION_TIME_400MS,
         }

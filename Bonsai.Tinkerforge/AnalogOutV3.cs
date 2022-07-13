@@ -48,7 +48,7 @@ namespace Bonsai.Tinkerforge
         /// </param>
         /// <returns>
         /// A sequence of <see cref="int"/> values representing the
-        /// written voltage in units of 1mV
+        /// written voltage in units of 1mV.
         /// </returns>
         public IObservable<int> Process(IObservable<IPConnection> source)
         {
@@ -66,7 +66,7 @@ namespace Bonsai.Tinkerforge
         /// </param>
         /// <returns>
         /// A sequence of <see cref="int"/> values representing the
-        /// written voltage in units of 1mV
+        /// written voltage in units of 1mV.
         /// </returns>
         public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
         {

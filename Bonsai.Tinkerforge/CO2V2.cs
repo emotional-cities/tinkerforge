@@ -100,7 +100,7 @@ namespace Bonsai.Tinkerforge
         public struct Co2DataFrame
         {
             /// <summary>
-            /// Represents the CO2 concentration in units of 1ppm
+            /// Represents the CO2 concentration in units of 1ppm.
             /// </summary>
             public int Co2Concentration;
 

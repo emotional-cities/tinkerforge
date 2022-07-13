@@ -83,7 +83,7 @@ namespace Bonsai.Tinkerforge
         /// </param>
         /// <returns>
         /// A sequence of <see cref="int"/> values representing the
-        /// written voltage in units of 1mV
+        /// written voltage in units of 1mV.
         /// </returns>
         public IObservable<int> Process(IObservable<IPConnection> source)
         {
@@ -101,7 +101,7 @@ namespace Bonsai.Tinkerforge
         /// </param>
         /// <returns>
         /// A sequence of <see cref="int"/> values representing the
-        /// written voltage in units of 1mV
+        /// written voltage in units of 1mV.
         /// </returns>
         public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
         {
@@ -141,12 +141,12 @@ namespace Bonsai.Tinkerforge
         public enum VoltageRangeConfig : byte
         {
             /// <summary>
-            /// The voltage range will be 0-5V
+            /// The voltage range will be 0-5V.
             /// </summary>
             Range0To5V = BrickletIndustrialAnalogOutV2.VOLTAGE_RANGE_0_TO_5V,
 
             /// <summary>
-            /// The voltage range will be 0-10V
+            /// The voltage range will be 0-10V.
             /// </summary>
             Range0To10V = BrickletIndustrialAnalogOutV2.VOLTAGE_RANGE_0_TO_10V,
         }
@@ -158,17 +158,17 @@ namespace Bonsai.Tinkerforge
         public enum CurrentRangeConfig : byte
         {
             /// <summary>
-            /// The current range will be 4-20mA
+            /// The current range will be 4-20mA.
             /// </summary>
             Range4To20mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_4_TO_20MA,
 
             /// <summary>
-            /// The current range will be 0-20mA
+            /// The current range will be 0-20mA.
             /// </summary>
             Range0To20mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_0_TO_20MA,
 
             /// <summary>
-            /// The current range will be 0-24mA
+            /// The current range will be 0-24mA.
             /// </summary>
             Range0To24mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_0_TO_24MA
         }
