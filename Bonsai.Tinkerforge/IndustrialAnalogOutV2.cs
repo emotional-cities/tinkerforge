@@ -24,25 +24,25 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the output voltage range.
         /// </summary>
         [Description("Specifies the output voltage range.")]
-        public VoltageRangeConfig VoltageRange { get; set; } = VoltageRangeConfig.Range0To10V;
+        public IndustrialAnalogOutV2VoltageRange VoltageRange { get; set; } = IndustrialAnalogOutV2VoltageRange.Range0To10V;
 
         /// <summary>
         /// Gets or sets a value specifying the output current range.
         /// </summary>
         [Description("Specifies the output current range.")]
-        public CurrentRangeConfig CurrentRange { get; set; } = CurrentRangeConfig.Range0To24mA;
+        public IndustrialAnalogOutV2CurrentRange CurrentRange { get; set; } = IndustrialAnalogOutV2CurrentRange.Range0To24mA;
 
         /// <summary>
         /// Gets or sets a value specifying the behaviour of the 'out' LED
         /// </summary>
         [Description("Specifies the behavior of the Out LED.")]
-        public OutLedConfig OutLed { get; set; } = OutLedConfig.ShowOutStatus;
+        public IndustrialAnalogOutV2OutLedConfig OutLed { get; set; } = IndustrialAnalogOutV2OutLedConfig.ShowOutStatus;
 
         /// <summary>
         /// Gets or sets a value specifying the behavior of the out status LED.
         /// </summary>
         [Description("Specifies the behavior of the Out Status LED.")]
-        public OutLedStatusConfig OutLedStatus { get; set; } = OutLedStatusConfig.Intensity;
+        public IndustrialAnalogOutV2OutLedStatusConfig OutLedStatus { get; set; } = IndustrialAnalogOutV2OutLedStatusConfig.Intensity;
 
         /// <summary>
         /// Gets or sets the minimum value of the status LED.
@@ -60,7 +60,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public BrickletIndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = BrickletIndustrialAnalogOutV2StatusLedConfig.ShowStatus;
+        public IndustrialAnalogOutV2StatusLedConfig StatusLed { get; set; } = IndustrialAnalogOutV2StatusLedConfig.ShowStatus;
 
         /// <summary>
         /// Gets or sets a value specifying the initial voltage on initialisation.
@@ -133,116 +133,117 @@ namespace Bonsai.Tinkerforge
                 return voltage.Do(device.SetOutputVoltage);
             });
         }
+    }
+
+    /// <summary>
+    /// Specifies the voltage range configuration of the Industrial Analog Out Bricklet 2.0.
+    /// The resolution will always be 12 bit, therefore precision is higher with a smaller range.
+    /// </summary>
+    public enum IndustrialAnalogOutV2VoltageRange : byte
+    {
+        /// <summary>
+        /// The voltage range will be 0-5V.
+        /// </summary>
+        Range0To5V = BrickletIndustrialAnalogOutV2.VOLTAGE_RANGE_0_TO_5V,
 
         /// <summary>
-        /// Specifies the voltage range configuration of the Industrial Analog Out Bricklet 2.0.
-        /// The resolution will always be 12 bit, therefore precision is higher with a smaller range.
+        /// The voltage range will be 0-10V.
         /// </summary>
-        public enum VoltageRangeConfig : byte
-        {
-            /// <summary>
-            /// The voltage range will be 0-5V.
-            /// </summary>
-            Range0To5V = BrickletIndustrialAnalogOutV2.VOLTAGE_RANGE_0_TO_5V,
+        Range0To10V = BrickletIndustrialAnalogOutV2.VOLTAGE_RANGE_0_TO_10V,
+    }
 
-            /// <summary>
-            /// The voltage range will be 0-10V.
-            /// </summary>
-            Range0To10V = BrickletIndustrialAnalogOutV2.VOLTAGE_RANGE_0_TO_10V,
-        }
+    /// <summary>
+    /// Specifies the current range configuration of the Industrial Analog Out Bricklet 2.0.
+    /// The resolution will always be 12 bit, therefore precision is higher with a smaller range.
+    /// </summary>
+    public enum IndustrialAnalogOutV2CurrentRange : byte
+    {
+        /// <summary>
+        /// The current range will be 4-20mA.
+        /// </summary>
+        Range4To20mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_4_TO_20MA,
 
         /// <summary>
-        /// Specifies the current range configuration of the Industrial Analog Out Bricklet 2.0.
-        /// The resolution will always be 12 bit, therefore precision is higher with a smaller range.
+        /// The current range will be 0-20mA.
         /// </summary>
-        public enum CurrentRangeConfig : byte
-        {
-            /// <summary>
-            /// The current range will be 4-20mA.
-            /// </summary>
-            Range4To20mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_4_TO_20MA,
-
-            /// <summary>
-            /// The current range will be 0-20mA.
-            /// </summary>
-            Range0To20mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_0_TO_20MA,
-
-            /// <summary>
-            /// The current range will be 0-24mA.
-            /// </summary>
-            Range0To24mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_0_TO_24MA
-        }
+        Range0To20mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_0_TO_20MA,
 
         /// <summary>
-        /// Specifies the configuration of the Industrial Analog Out Bricklet 2.0. out status LED.
+        /// The current range will be 0-24mA.
         /// </summary>
-        public enum OutLedStatusConfig : byte
-        {
-            /// <summary>
-            /// The out status LED will function in threshold mode.
-            /// A positive or negative threshold can be set above or below which 
-            /// the LED will turn on.
-            /// </summary>
-            Threshold = BrickletIndustrialAnalogOutV2.OUT_LED_STATUS_CONFIG_THRESHOLD,
+        Range0To24mA = BrickletIndustrialAnalogOutV2.CURRENT_RANGE_0_TO_24MA
+    }
 
-            /// <summary>
-            /// The out status LED will function in intensity mode.
-            /// The LED brightness will scale with a mV or uA value.
-            /// </summary>
-            Intensity = BrickletIndustrialAnalogOutV2.OUT_LED_STATUS_CONFIG_INTENSITY
-        }
+    /// <summary>
+    /// Specifies the configuration of the Industrial Analog Out Bricklet 2.0. out status LED.
+    /// </summary>
+    public enum IndustrialAnalogOutV2OutLedStatusConfig : byte
+    {
+        /// <summary>
+        /// The out status LED will function in threshold mode.
+        /// A positive or negative threshold can be set above or below which 
+        /// the LED will turn on.
+        /// </summary>
+        Threshold = BrickletIndustrialAnalogOutV2.OUT_LED_STATUS_CONFIG_THRESHOLD,
 
         /// <summary>
-        /// Specifies the configuration of the Industrial Analog Out Bricklet 2.0. out LED.
+        /// The out status LED will function in intensity mode.
+        /// The LED brightness will scale with a mV or uA value.
         /// </summary>
-        public enum OutLedConfig : byte {
-            /// <summary>
-            /// The out LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_OFF,
+        Intensity = BrickletIndustrialAnalogOutV2.OUT_LED_STATUS_CONFIG_INTENSITY
+    }
 
-            /// <summary>
-            /// The out LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_ON,
-
-            /// <summary>
-            /// The out LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_SHOW_HEARTBEAT,
-
-            /// <summary>
-            /// The out LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowOutStatus = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_SHOW_OUT_STATUS
-        }
+    /// <summary>
+    /// Specifies the configuration of the Industrial Analog Out Bricklet 2.0. out LED.
+    /// </summary>
+    public enum IndustrialAnalogOutV2OutLedConfig : byte
+    {
+        /// <summary>
+        /// The out LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_OFF,
 
         /// <summary>
-        /// Specifies the behavior of the Industrial Analog Out Bricklet 2.0. status LED.
+        /// The out LED will be permanently ON as long as the bricklet is powered.
         /// </summary>
-        public enum BrickletIndustrialAnalogOutV2StatusLedConfig : byte
-        {
-            /// <summary>
-            /// The status LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_OFF,
+        On = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_ON,
 
-            /// <summary>
-            /// The status LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_ON,
+        /// <summary>
+        /// The out LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_SHOW_HEARTBEAT,
 
-            /// <summary>
-            /// The status LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+        /// <summary>
+        /// The out LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowOutStatus = BrickletIndustrialAnalogOutV2.OUT_LED_CONFIG_SHOW_OUT_STATUS
+    }
 
-            /// <summary>
-            /// The LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowStatus = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_SHOW_STATUS
-        }
+    /// <summary>
+    /// Specifies the behavior of the Industrial Analog Out Bricklet 2.0. status LED.
+    /// </summary>
+    public enum IndustrialAnalogOutV2StatusLedConfig : byte
+    {
+        /// <summary>
+        /// The status LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_OFF,
+
+        /// <summary>
+        /// The status LED will be permanently ON as long as the bricklet is powered.
+        /// </summary>
+        On = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_ON,
+
+        /// <summary>
+        /// The status LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+
+        /// <summary>
+        /// The LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowStatus = BrickletIndustrialAnalogOutV2.STATUS_LED_CONFIG_SHOW_STATUS
     }
 }

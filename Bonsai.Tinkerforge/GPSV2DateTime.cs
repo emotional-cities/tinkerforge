@@ -10,7 +10,7 @@ namespace Bonsai.Tinkerforge
     /// Represents an operator that generates a datetime data stream from a GPS Bricklet 2.0.
     /// </summary>
     [Description("Generates a datetime data stream from a GPSV2 device.")]
-    public class GPSV2DateTime : Combinator<BrickletGPSV2, GPSV2DateTime.DateTimeData>
+    public class GPSV2DateTime : Combinator<BrickletGPSV2, GPSV2DateTimeDataFrame>
     {
         /// <summary>
         /// Measures datetime data from a GPS Bricklet 2.0.
@@ -19,18 +19,18 @@ namespace Bonsai.Tinkerforge
         /// A sequence containing the connection to a GPS Bricklet 2.0.
         /// </param>
         /// <returns>
-        /// A sequence of <see cref="DateTimeData"/> objects representing the
+        /// A sequence of <see cref="GPSV2DateTimeDataFrame"/> objects representing the
         /// datetime measurements from the GPS Bricklet 2.0.
         /// </returns>
-        public override IObservable<DateTimeData> Process(IObservable<BrickletGPSV2> source)
+        public override IObservable<GPSV2DateTimeDataFrame> Process(IObservable<BrickletGPSV2> source)
         {
             return source.SelectStream(device =>
             {
-                return Observable.Create<DateTimeData>(observer =>
+                return Observable.Create<GPSV2DateTimeDataFrame>(observer =>
                 {
                     BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
                     {
-                        observer.OnNext(new DateTimeData(date, time));
+                        observer.OnNext(new GPSV2DateTimeDataFrame(date, time));
                     };
 
                     device.DateTimeCallback += handler;
@@ -43,32 +43,32 @@ namespace Bonsai.Tinkerforge
                 });
             });
         }
+    }
+
+    /// <summary>
+    /// Represents a set of altitude values sampled from a GPS Bricklet 2.0.
+    /// </summary>
+    public struct GPSV2DateTimeDataFrame
+    {
+        /// <summary>
+        /// Represents the date in ddmmyy format.
+        /// </summary>
+        public long Date;
 
         /// <summary>
-        /// Represents a set of altitude values sampled from a GPS Bricklet 2.0.
+        /// Represents the time in hhmmss.sss format.
         /// </summary>
-        public struct DateTimeData
+        public long Time;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GPSV2DateTimeDataFrame"/> structure.
+        /// </summary>
+        /// <param name="date">The date value (ddmmyy).</param>
+        /// <param name="time">The time value (hhmmss.sss).</param>
+        public GPSV2DateTimeDataFrame(long date, long time)
         {
-            /// <summary>
-            /// Represents the date in ddmmyy format.
-            /// </summary>
-            public long Date;
-
-            /// <summary>
-            /// Represents the time in hhmmss.sss format.
-            /// </summary>
-            public long Time;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="DateTimeData"/> structure.
-            /// </summary>
-            /// <param name="date">The date value (ddmmyy).</param>
-            /// <param name="time">The time value (hhmmss.sss).</param>
-            public DateTimeData(long date, long time)
-            {
-                Date = date;
-                Time = time;
-            }
+            Date = date;
+            Time = time;
         }
     }
 }

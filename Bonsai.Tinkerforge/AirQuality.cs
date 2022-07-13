@@ -12,7 +12,7 @@ namespace Bonsai.Tinkerforge
     /// </summary>
     [DefaultProperty(nameof(Uid))]
     [Description("Measures IAQ (indoor air quality) index, air pressure, humidity and temperature from an Air Quality Bricklet.")]
-    public class AirQuality : Combinator<IPConnection, AirQuality.AirQualityDataFrame>
+    public class AirQuality : Combinator<IPConnection, AirQualityDataFrame>
     {
         /// <summary>
         /// Gets or sets the bricklet device UID.
@@ -40,13 +40,13 @@ namespace Bonsai.Tinkerforge
         /// (requires power cycle to change).
         /// </summary>
         [Description("Specifies the duration of background calibration (requires power cycle to change).")]
-        public BackgroundCalibrationDurationConfig BackgroundCalibrationDuration { get; set; } = BackgroundCalibrationDurationConfig.Days4;
+        public AirQualityBackgroundCalibrationDuration BackgroundCalibrationDuration { get; set; } = AirQualityBackgroundCalibrationDuration.Days4;
 
         /// <summary>
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public BrickletAirQualityStatusLedConfig StatusLed { get; set; } = BrickletAirQualityStatusLedConfig.ShowStatus;
+        public AirQualityStatusLedConfig StatusLed { get; set; } = AirQualityStatusLedConfig.ShowStatus;
 
         /// <inheritdoc/>
         public override string ToString()
@@ -83,7 +83,7 @@ namespace Bonsai.Tinkerforge
                     {
                         observer.OnNext(new AirQualityDataFrame(
                             iaqIndex,
-                            (BrickletAirQualityAccuracy)iaqAccuracy,
+                            (AirQualityAccuracy)iaqAccuracy,
                             temperature,
                             humidity,
                             airPressure));
@@ -99,125 +99,125 @@ namespace Bonsai.Tinkerforge
                 });
             });
         }
+    }
+
+    /// <summary>
+    /// Represents a set of measurement values sampled from an Air Quality Bricklet.
+    /// </summary>
+    public struct AirQualityDataFrame
+    {
+        /// <summary>
+        /// Represents the IAQ (indoor air quality) index, between 0 (best) and 500 (worst).
+        /// </summary>
+        public int IaqIndex;
 
         /// <summary>
-        /// Represents a set of measurement values sampled from an Air Quality Bricklet.
+        /// Represents the IAQ index accuracy.
         /// </summary>
-        public struct AirQualityDataFrame
-        {
-            /// <summary>
-            /// Represents the IAQ (indoor air quality) index, between 0 (best) and 500 (worst).
-            /// </summary>
-            public int IaqIndex;
-
-            /// <summary>
-            /// Represents the IAQ index accuracy.
-            /// </summary>
-            public BrickletAirQualityAccuracy IaqIndexAccuracy;
-
-            /// <summary>
-            /// Represents the current temperature, in hundredths of a degree (celsius).
-            /// </summary>
-            public int Temperature;
-
-            /// <summary>
-            /// Represents the relative humidity in hundredths of percentage points (%RH).
-            /// </summary>
-            public int Humidity;
-
-            /// <summary>
-            /// Represents the current air pressure in hundredths of hPa.
-            /// </summary>
-            public int AirPressure;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="AirQualityDataFrame"/> structure.
-            /// </summary>
-            /// <param name="iaqIndex">The IAQ (indoor air quality) index.</param>
-            /// <param name="iaqAccuracy">The IAQ index accuracy.</param>
-            /// <param name="temperature">The current temperature value.</param>
-            /// <param name="humidity">The current relative humidity value.</param>
-            /// <param name="airPressure">The current air pressure value.</param>
-            public AirQualityDataFrame(int iaqIndex, BrickletAirQualityAccuracy iaqAccuracy, int temperature, int humidity, int airPressure)
-            {
-                IaqIndex = iaqIndex; 
-                IaqIndexAccuracy = iaqAccuracy;
-                Temperature = temperature;
-                Humidity = humidity;
-                AirPressure = airPressure;
-            }
-        }
+        public AirQualityAccuracy IaqIndexAccuracy;
 
         /// <summary>
-        /// Specifies the duration of the background calibration for the Air Quality Bricklet.
+        /// Represents the current temperature, in hundredths of a degree (celsius).
         /// </summary>
-        public enum BackgroundCalibrationDurationConfig : byte
-        {
-            /// <summary>
-            /// Specifies that the automatic background calibration of the IAQ index
-            /// will run for 4 days.
-            /// </summary>
-            Days4 = BrickletAirQuality.DURATION_4_DAYS,
-
-            /// <summary>
-            /// Specifies that the automatic background calibration of the IAQ index
-            /// will run for 28 days.
-            /// </summary>
-            Days28 = BrickletAirQuality.DURATION_28_DAYS
-        }
+        public int Temperature;
 
         /// <summary>
-        /// Specifies the behavior of the Air Quality Bricklet status LED.
+        /// Represents the relative humidity in hundredths of percentage points (%RH).
         /// </summary>
-        public enum BrickletAirQualityStatusLedConfig : byte
-        {
-            /// <summary>
-            /// The status LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletAirQuality.STATUS_LED_CONFIG_OFF,
-
-            /// <summary>
-            /// The status LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletAirQuality.STATUS_LED_CONFIG_ON,
-
-            /// <summary>
-            /// The status LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletAirQuality.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-
-            /// <summary>
-            /// The LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowStatus = BrickletAirQuality.STATUS_LED_CONFIG_SHOW_STATUS
-        }
+        public int Humidity;
 
         /// <summary>
-        /// Specifies the accuracy of the IAQ index.
+        /// Represents the current air pressure in hundredths of hPa.
         /// </summary>
-        public enum BrickletAirQualityAccuracy : byte
+        public int AirPressure;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AirQualityDataFrame"/> structure.
+        /// </summary>
+        /// <param name="iaqIndex">The IAQ (indoor air quality) index.</param>
+        /// <param name="iaqAccuracy">The IAQ index accuracy.</param>
+        /// <param name="temperature">The current temperature value.</param>
+        /// <param name="humidity">The current relative humidity value.</param>
+        /// <param name="airPressure">The current air pressure value.</param>
+        public AirQualityDataFrame(int iaqIndex, AirQualityAccuracy iaqAccuracy, int temperature, int humidity, int airPressure)
         {
-            /// <summary>
-            /// The Bricklet was just started and the sensor is stabilizing.
-            /// </summary>
-            Unreliable = 0,
-
-            /// <summary>
-            /// The background history is uncertain. This typically means the gas sensor
-            /// data was too stable for the calibration algorithm to clearly define its references.
-            /// </summary>
-            Low = 1,
-
-            /// <summary>
-            /// The Bricklet found new calibration data and is currently calibrating.
-            /// </summary>
-            Medium = 2,
-
-            /// <summary>
-            /// The Bricklet is calibrated successfully.
-            /// </summary>
-            High = 3
+            IaqIndex = iaqIndex;
+            IaqIndexAccuracy = iaqAccuracy;
+            Temperature = temperature;
+            Humidity = humidity;
+            AirPressure = airPressure;
         }
+    }
+
+    /// <summary>
+    /// Specifies the duration of the background calibration for the Air Quality Bricklet.
+    /// </summary>
+    public enum AirQualityBackgroundCalibrationDuration : byte
+    {
+        /// <summary>
+        /// Specifies that the automatic background calibration of the IAQ index
+        /// will run for 4 days.
+        /// </summary>
+        Days4 = BrickletAirQuality.DURATION_4_DAYS,
+
+        /// <summary>
+        /// Specifies that the automatic background calibration of the IAQ index
+        /// will run for 28 days.
+        /// </summary>
+        Days28 = BrickletAirQuality.DURATION_28_DAYS
+    }
+
+    /// <summary>
+    /// Specifies the behavior of the Air Quality Bricklet status LED.
+    /// </summary>
+    public enum AirQualityStatusLedConfig : byte
+    {
+        /// <summary>
+        /// The status LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletAirQuality.STATUS_LED_CONFIG_OFF,
+
+        /// <summary>
+        /// The status LED will be permanently ON as long as the bricklet is powered.
+        /// </summary>
+        On = BrickletAirQuality.STATUS_LED_CONFIG_ON,
+
+        /// <summary>
+        /// The status LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletAirQuality.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+
+        /// <summary>
+        /// The LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowStatus = BrickletAirQuality.STATUS_LED_CONFIG_SHOW_STATUS
+    }
+
+    /// <summary>
+    /// Specifies the accuracy of the IAQ index.
+    /// </summary>
+    public enum AirQualityAccuracy : byte
+    {
+        /// <summary>
+        /// The Bricklet was just started and the sensor is stabilizing.
+        /// </summary>
+        Unreliable = 0,
+
+        /// <summary>
+        /// The background history is uncertain. This typically means the gas sensor
+        /// data was too stable for the calibration algorithm to clearly define its references.
+        /// </summary>
+        Low = 1,
+
+        /// <summary>
+        /// The Bricklet found new calibration data and is currently calibrating.
+        /// </summary>
+        Medium = 2,
+
+        /// <summary>
+        /// The Bricklet is calibrated successfully.
+        /// </summary>
+        High = 3
     }
 }

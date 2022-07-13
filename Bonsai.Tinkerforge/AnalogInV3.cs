@@ -32,7 +32,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public BrickletAnalogInV3LedConfig StatusLed { get; set; } = BrickletAnalogInV3LedConfig.ShowStatus;
+        public AnalogInV3StatusLedConfig StatusLed { get; set; } = AnalogInV3StatusLedConfig.ShowStatus;
 
         /// <inheritdoc/>
         public override string ToString()
@@ -78,32 +78,32 @@ namespace Bonsai.Tinkerforge
                 });
             });
         }
+    }
+
+    /// <summary>
+    /// Specifies the behavior of the Analog In Bricklet 3.0. status LED.
+    /// </summary>
+    public enum AnalogInV3StatusLedConfig : byte
+    {
+        /// <summary>
+        /// The status LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
 
         /// <summary>
-        /// Specifies the behavior of the Analog In Bricklet 3.0. status LED.
+        /// The status LED will be permanently ON as long as the bricklet is powered.
         /// </summary>
-        public enum BrickletAnalogInV3LedConfig : byte
-        {
-            /// <summary>
-            /// The status LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
+        On = BrickletHumidityV2.STATUS_LED_CONFIG_ON,
 
-            /// <summary>
-            /// The status LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletHumidityV2.STATUS_LED_CONFIG_ON,
+        /// <summary>
+        /// The status LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
 
-            /// <summary>
-            /// The status LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-
-            /// <summary>
-            /// The LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowStatus = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
-        }
+        /// <summary>
+        /// The LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowStatus = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
     }
 }

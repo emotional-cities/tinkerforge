@@ -11,7 +11,7 @@ namespace Bonsai.Tinkerforge
     /// </summary>
     [DefaultProperty(nameof(Uid))]
     [Description("Measures CO2 concentration, temperature, and humidity from a CO2 Bricklet 2.0.")]
-    public class CO2V2 : Combinator<IPConnection, CO2V2.Co2DataFrame>
+    public class CO2V2 : Combinator<IPConnection, CO2V2DataFrame>
     {
         /// <summary>
         /// Gets or sets the bricklet device UID.
@@ -45,7 +45,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public BrickletCO2V2StatusLedConfig StatusLed { get; set; } = BrickletCO2V2StatusLedConfig.ShowStatus;
+        public CO2V2StatusLedConfig StatusLed { get; set; } = CO2V2StatusLedConfig.ShowStatus;
 
         /// <inheritdoc/>
         public override string ToString()
@@ -60,10 +60,10 @@ namespace Bonsai.Tinkerforge
         /// A sequence containing the TCP/IP connection to the Brick Daemon.
         /// </param>
         /// <returns>
-        /// A sequence of <see cref="Co2DataFrame"/> objects representing the
+        /// A sequence of <see cref="CO2V2DataFrame"/> objects representing the
         /// measurements from the CO2 Bricklet 2.0.
         /// </returns>
-        public override IObservable<Co2DataFrame> Process(IObservable<IPConnection> source)
+        public override IObservable<CO2V2DataFrame> Process(IObservable<IPConnection> source)
         {
             return source.SelectStream(connection =>
             {
@@ -76,11 +76,11 @@ namespace Bonsai.Tinkerforge
                     device.SetAllValuesCallbackConfiguration(Period, false);
                 };
 
-                return Observable.Create<Co2DataFrame>(observer =>
+                return Observable.Create<CO2V2DataFrame>(observer =>
                 {
                     BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
                     {
-                        observer.OnNext(new Co2DataFrame(co2Concentration, temperature, humidity));
+                        observer.OnNext(new CO2V2DataFrame(co2Concentration, temperature, humidity));
                     };
 
                     device.AllValuesCallback += handler;
@@ -93,66 +93,66 @@ namespace Bonsai.Tinkerforge
                 });
             });
         }
+    }
+
+    /// <summary>
+    /// Represents a set of measurement values sampled from an CO2 Bricklet 2.0.
+    /// </summary>
+    public struct CO2V2DataFrame
+    {
+        /// <summary>
+        /// Represents the CO2 concentration in units of 1ppm.
+        /// </summary>
+        public int CO2Concentration;
 
         /// <summary>
-        /// Represents a set of measurement values sampled from an CO2 Bricklet 2.0.
+        /// Represents the current temperature, in hundredths of a degree (celsius).
         /// </summary>
-        public struct Co2DataFrame
-        {
-            /// <summary>
-            /// Represents the CO2 concentration in units of 1ppm.
-            /// </summary>
-            public int Co2Concentration;
-
-            /// <summary>
-            /// Represents the current temperature, in hundredths of a degree (celsius).
-            /// </summary>
-            public short Temperature;
-
-            /// <summary>
-            /// Represents the relative humidity in hundredths of percentage points (%RH).
-            /// </summary>
-            public int Humidity;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Co2DataFrame"/> structure.
-            /// </summary>
-            /// <param name="co2Concentration">The CO2 concentration.</param>
-            /// <param name="temperature">The current temperature value.</param>
-            /// <param name="humidity">The current humidity value.</param>
-            public Co2DataFrame(int co2Concentration, short temperature, int humidity)
-            {
-                Co2Concentration = co2Concentration;
-                Temperature = temperature;
-                Humidity = humidity;
-            }
-        }
+        public short Temperature;
 
         /// <summary>
-        /// Specifies the behavior of the CO2 Bricklet 2.0. status LED.
+        /// Represents the relative humidity in hundredths of percentage points (%RH).
         /// </summary>
-        public enum BrickletCO2V2StatusLedConfig : byte
+        public int Humidity;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CO2V2DataFrame"/> structure.
+        /// </summary>
+        /// <param name="co2Concentration">The CO2 concentration.</param>
+        /// <param name="temperature">The current temperature value.</param>
+        /// <param name="humidity">The current humidity value.</param>
+        public CO2V2DataFrame(int co2Concentration, short temperature, int humidity)
         {
-            /// <summary>
-            /// The status LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletCO2V2.STATUS_LED_CONFIG_OFF,
-
-            /// <summary>
-            /// The status LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletCO2V2.STATUS_LED_CONFIG_ON,
-
-            /// <summary>
-            /// The status LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-
-            /// <summary>
-            /// The LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowStatus = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
+            CO2Concentration = co2Concentration;
+            Temperature = temperature;
+            Humidity = humidity;
         }
+    }
+
+    /// <summary>
+    /// Specifies the behavior of the CO2 Bricklet 2.0. status LED.
+    /// </summary>
+    public enum CO2V2StatusLedConfig : byte
+    {
+        /// <summary>
+        /// The status LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletCO2V2.STATUS_LED_CONFIG_OFF,
+
+        /// <summary>
+        /// The status LED will be permanently ON as long as the bricklet is powered.
+        /// </summary>
+        On = BrickletCO2V2.STATUS_LED_CONFIG_ON,
+
+        /// <summary>
+        /// The status LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+
+        /// <summary>
+        /// The LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowStatus = BrickletCO2V2.STATUS_LED_CONFIG_SHOW_STATUS
     }
 }

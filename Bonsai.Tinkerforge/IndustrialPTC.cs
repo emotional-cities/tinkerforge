@@ -48,13 +48,13 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the wire mode of the sensor.
         /// </summary>
         [Description("Specifies the wire mode of the sensor.")]
-        public WireModeConfig WireMode { get; set; } = WireModeConfig.WireMode2;
+        public IndustrialPTCWireMode WireMode { get; set; } = IndustrialPTCWireMode.WireMode2;
 
         /// <summary>
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public BrickletIndustrialPTCStatusLedConfig StatusLed { get; set; } = BrickletIndustrialPTCStatusLedConfig.ShowStatus;
+        public IndustrialPTCStatusLedConfig StatusLed { get; set; } = IndustrialPTCStatusLedConfig.ShowStatus;
 
         /// <inheritdoc/>
         public override string ToString()
@@ -103,54 +103,54 @@ namespace Bonsai.Tinkerforge
                 });
             });
         }
+    }
+
+    /// <summary>
+    /// Specifies the wire mode configuration of a Industrial PTC Bricklet
+    /// corresponding the wires of the sensor.
+    /// </summary>
+    public enum IndustrialPTCWireMode : byte
+    {
+        /// <summary>
+        /// The bricklet will use a 2-wire sensor.
+        /// </summary>
+        WireMode2 = BrickletIndustrialPTC.WIRE_MODE_2,
 
         /// <summary>
-        /// Specifies the wire mode configuration of a Industrial PTC Bricklet
-        /// corresponding the wires of the sensor.
+        /// The bricklet will use a 2-wire sensor.
         /// </summary>
-        public enum WireModeConfig : byte
-        {
-            /// <summary>
-            /// The bricklet will use a 2-wire sensor.
-            /// </summary>
-            WireMode2 = BrickletIndustrialPTC.WIRE_MODE_2,
-
-            /// <summary>
-            /// The bricklet will use a 2-wire sensor.
-            /// </summary>
-            WireMode3 = BrickletIndustrialPTC.WIRE_MODE_3,
-
-            /// <summary>
-            /// The bricklet will use a 4-wire sensor.
-            /// </summary>
-            WireMode4 = BrickletIndustrialPTC.WIRE_MODE_4,
-        }
+        WireMode3 = BrickletIndustrialPTC.WIRE_MODE_3,
 
         /// <summary>
-        /// Specifies the behavior of the Industrial PTC Bricklet status LED.
+        /// The bricklet will use a 4-wire sensor.
         /// </summary>
-        public enum BrickletIndustrialPTCStatusLedConfig : byte
-        {
-            /// <summary>
-            /// The status LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletIndustrialPTC.STATUS_LED_CONFIG_OFF,
+        WireMode4 = BrickletIndustrialPTC.WIRE_MODE_4,
+    }
 
-            /// <summary>
-            /// The status LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletIndustrialPTC.STATUS_LED_CONFIG_ON,
+    /// <summary>
+    /// Specifies the behavior of the Industrial PTC Bricklet status LED.
+    /// </summary>
+    public enum IndustrialPTCStatusLedConfig : byte
+    {
+        /// <summary>
+        /// The status LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletIndustrialPTC.STATUS_LED_CONFIG_OFF,
 
-            /// <summary>
-            /// The status LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+        /// <summary>
+        /// The status LED will be permanently ON as long as the bricklet is powered.
+        /// </summary>
+        On = BrickletIndustrialPTC.STATUS_LED_CONFIG_ON,
 
-            /// <summary>
-            /// The LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowStatus = BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_STATUS
-        }
+        /// <summary>
+        /// The status LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
+
+        /// <summary>
+        /// The LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowStatus = BrickletIndustrialPTC.STATUS_LED_CONFIG_SHOW_STATUS
     }
 }

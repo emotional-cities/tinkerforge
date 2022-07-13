@@ -32,7 +32,7 @@ namespace Bonsai.Tinkerforge
         /// used to dy the sensor in extremely wet conditions.
         /// </summary>
         [Description("Specifies the heater configuration. The heater can be used to dry the sensor in extremely wet conditions.")]
-        public HeaterConfig Heater { get; set; } = HeaterConfig.Disabled;
+        public HumidityV2HeaterConfig Heater { get; set; } = HumidityV2HeaterConfig.Disabled;
 
         /// <summary>
         /// Gets or sets a value specifying the moving average window length (number of samples) for temperature.
@@ -54,7 +54,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public BrickletHumidityStatusLedConfig StatusLed { get; set; } = BrickletHumidityStatusLedConfig.ShowStatus;
+        public HumidityV2StatusLedConfig StatusLed { get; set; } = HumidityV2StatusLedConfig.ShowStatus;
 
         /// <inheritdoc/>
         public override string ToString()
@@ -103,48 +103,48 @@ namespace Bonsai.Tinkerforge
                 });
             });
         }
+    }
+
+    /// <summary>
+    /// Specifies the configuration of the heater.
+    /// </summary>
+    public enum HumidityV2HeaterConfig : byte
+    {
+        /// <summary>
+        /// Specifies that the heater will be disabled.
+        /// </summary>
+        Disabled = BrickletHumidityV2.HEATER_CONFIG_DISABLED,
 
         /// <summary>
-        /// Specifies the configuration of the heater.
+        /// Specifies that the heater will be enabled.
         /// </summary>
-        public enum HeaterConfig : byte
-        {
-            /// <summary>
-            /// Specifies that the heater will be disabled.
-            /// </summary>
-            Disabled = BrickletHumidityV2.HEATER_CONFIG_DISABLED,
+        Enabled = BrickletHumidityV2.HEATER_CONFIG_ENABLED
+    }
 
-            /// <summary>
-            /// Specifies that the heater will be enabled.
-            /// </summary>
-            Enabled = BrickletHumidityV2.HEATER_CONFIG_ENABLED
-        }
+    /// <summary>
+    /// Specifies the behavior of the Humidity Bricklet 2.0. status LED.
+    /// </summary>
+    public enum HumidityV2StatusLedConfig : byte
+    {
+        /// <summary>
+        /// The status LED will be permanently OFF.
+        /// </summary>
+        Off = BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
 
         /// <summary>
-        /// Specifies the behavior of the Humidity Bricklet 2.0. status LED.
+        /// The status LED will be permanently ON as long as the bricklet is powered.
         /// </summary>
-        public enum BrickletHumidityStatusLedConfig : byte
-        {
-            /// <summary>
-            /// The status LED will be permanently OFF.
-            /// </summary>
-            Off = BrickletHumidityV2.STATUS_LED_CONFIG_OFF,
+        On = BrickletHumidityV2.STATUS_LED_CONFIG_ON,
 
-            /// <summary>
-            /// The status LED will be permanently ON as long as the bricklet is powered.
-            /// </summary>
-            On = BrickletHumidityV2.STATUS_LED_CONFIG_ON,
+        /// <summary>
+        /// The status LED will change state periodically every second.
+        /// </summary>
+        ShowHeartbeat = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
 
-            /// <summary>
-            /// The status LED will change state periodically every second.
-            /// </summary>
-            ShowHeartbeat = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_HEARTBEAT,
-
-            /// <summary>
-            /// The LED will show communication traffic between Brick and Bricklet,
-            /// flickering once for every 10 received data packets.
-            /// </summary>
-            ShowStatus = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
-        }
+        /// <summary>
+        /// The LED will show communication traffic between Brick and Bricklet,
+        /// flickering once for every 10 received data packets.
+        /// </summary>
+        ShowStatus = BrickletHumidityV2.STATUS_LED_CONFIG_SHOW_STATUS
     }
 }
