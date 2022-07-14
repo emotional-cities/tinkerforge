@@ -113,6 +113,15 @@ namespace Bonsai.Tinkerforge
             Pm25 = pm25;
             Pm100 = pm100;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(ParticulateMatterDataFrame)} {{ " +
+                $"{nameof(Pm10)} = {Pm10}, " +
+                $"{nameof(Pm25)} = {Pm25}, " +
+                $"{nameof(Pm100)} = {Pm100} }}";
+        }
     }
 
     /// <summary>
