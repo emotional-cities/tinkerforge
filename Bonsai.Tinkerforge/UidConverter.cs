@@ -83,11 +83,11 @@ namespace Bonsai.Tinkerforge
                         try { ipcon.Connect(connectionID.HostName, connectionID.Port); }
                         catch { continue; } // Best effort. If there is a connection problem, just keep going.
                         ipcon.Enumerate();
-                        /// N.B. GetStandardValues is called twice by Windows Forms. Once to check the dropdown list and then again
-                        /// to check cursor position in the list. This is annoying here because it means the enumerate thread will
-                        /// be called twice leading to e.g. the device list being cleared in the middle of population. The 'hack' 
-                        /// here is to sleep the thread so it can complete before the 2nd call. Not optimal but the Enumerate 
-                        /// method doesn't give us much choice. TODO - look for more elegant solution
+                        // N.B. GetStandardValues is called twice by Windows Forms. Once to check the dropdown list and then again
+                        // to check cursor position in the list. This is annoying here because it means the enumerate thread will
+                        // be called twice leading to e.g. the device list being cleared in the middle of population. The 'hack' 
+                        // here is to sleep the thread so it can complete before the 2nd call. Not optimal but the Enumerate 
+                        // method doesn't give us much choice.
                         Thread.Sleep(10);
                         ipcon.Disconnect();
                     }
