@@ -18,6 +18,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets the bricklet device UID.
         /// </summary>
         [TypeConverter(typeof(UidConverter))]
+        [DeviceType(typeof(BrickletGPSV2))]
         [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
@@ -81,6 +82,11 @@ namespace Bonsai.Tinkerforge
         /// </returns>
         public override IObservable<BrickletGPSV2> Process(IObservable<IPConnection> source)
         {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                throw new ArgumentException("A device Uid must be specified", "Uid");
+            }
+
             return source.SelectStream(connection =>
             {
                 var device = new BrickletGPSV2(Uid, connection);

@@ -6,6 +6,7 @@ using System.Globalization;
 using Bonsai.Expressions;
 using System.Threading;
 using Tinkerforge;
+using System.Reflection;
 
 namespace Bonsai.Tinkerforge
 {
@@ -93,9 +94,17 @@ namespace Bonsai.Tinkerforge
                     }
                 }
 
+                var deviceType = ((DeviceTypeAttribute)context.PropertyDescriptor?
+                    .Attributes[typeof(DeviceTypeAttribute)])?
+                    .DeviceType;
+                var deviceDisplayName = (string)deviceType?.GetField(
+                    nameof(BrickMaster.DEVICE_DISPLAY_NAME),
+                    BindingFlags.Public | BindingFlags.Static)?
+                    .GetValue(null);
+
                 // Return the list of connected devices, filter by those that match the context instance (e.g. if context is AirQuality, only return AirQualityDevices)
                 return new StandardValuesCollection(devices.Values
-                    .Where(dev => TinkerforgeDeviceLookup.Defaults[dev.DeviceIdentifier] == context.Instance.ToString())
+                    .Where(dev => TinkerforgeDeviceLookup.Defaults[dev.DeviceIdentifier] == deviceDisplayName)
                     .ToList()
                 );
             }

@@ -18,6 +18,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets the bricklet device UID.
         /// </summary>
         [TypeConverter(typeof(UidConverter))]
+        [DeviceType(typeof(BrickletSoundPressureLevel))]
         [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
@@ -66,6 +67,11 @@ namespace Bonsai.Tinkerforge
         /// </returns>
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                throw new ArgumentException("A device Uid must be specified", "Uid");
+            }
+
             return source.SelectStream((Func<IPConnection, IObservable<int>>)(connection =>
             {
                 var device = new BrickletSoundPressureLevel(Uid, connection);
