@@ -12,7 +12,7 @@ namespace Bonsai.Tinkerforge
     /// </summary>
     [Combinator]
     [Description("Retrieves a stream of geography points, with or without altitude, from a sequence of GPSV2 coordinates.")]
-    [WorkflowElementCategory(ElementCategory.Combinator)]
+    [WorkflowElementCategory(ElementCategory.Transform)]
     public class GPSV2GeographyPoint
     {
         static GeographyPoint CreateGeographyPoint(ref GPSV2CoordinateDataFrame coordinate, double? altitude)
