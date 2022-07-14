@@ -106,6 +106,11 @@ namespace Bonsai.Tinkerforge
         /// </returns>
         public IObservable<int> Process(IObservable<IPConnection> source, IObservable<int> signal)
         {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                throw new ArgumentException("A device Uid must be specified", "Uid");
+            }
+
             return source.SelectStream(connection =>
             {
                 var device = new BrickletAnalogOutV3(Uid, connection);

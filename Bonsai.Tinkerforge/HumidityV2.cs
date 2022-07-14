@@ -76,6 +76,11 @@ namespace Bonsai.Tinkerforge
         /// </returns>
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
+            if (string.IsNullOrEmpty(Uid))
+            {
+                throw new ArgumentException("A device Uid must be specified", "Uid");
+            }
+
             return source.SelectStream(connection =>
             {
                 var device = new BrickletHumidityV2(Uid, connection);
