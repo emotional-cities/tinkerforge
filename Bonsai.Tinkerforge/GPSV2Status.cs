@@ -70,5 +70,13 @@ namespace Bonsai.Tinkerforge
             HasFix = hasFix;
             SatellitesView = satellitesView;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(GPSV2StatusDataFrame)} {{ " +
+                $"{nameof(HasFix)} = {HasFix}, " +
+                $"{nameof(SatellitesView)} = {SatellitesView} }}";
+        }
     }
 }
