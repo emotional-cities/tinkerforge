@@ -18,6 +18,7 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets the bricklet device UID.
         /// </summary>
         [TypeConverter(typeof(UidConverter))]
+        [DeviceType(typeof(BrickletAnalogInV3))]
         [Description("The bricklet device UID.")]
         public string Uid { get; set; }
 
