@@ -70,5 +70,13 @@ namespace Bonsai.Tinkerforge
             Date = date;
             Time = time;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(GPSV2DateTimeDataFrame)} {{ " +
+                $"{nameof(Date)} = {Date}, " +
+                $"{nameof(Time)} = {Time} }}";
+        }
     }
 }

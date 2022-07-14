@@ -127,6 +127,15 @@ namespace Bonsai.Tinkerforge
             Temperature = temperature;
             Humidity = humidity;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(CO2V2DataFrame)} {{ " +
+                $"{nameof(CO2Concentration)} = {CO2Concentration}, " +
+                $"{nameof(Temperature)} = {Temperature}, " +
+                $"{nameof(Humidity)} = {Humidity} }}";
+        }
     }
 
     /// <summary>

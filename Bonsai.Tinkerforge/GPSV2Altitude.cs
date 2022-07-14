@@ -70,5 +70,13 @@ namespace Bonsai.Tinkerforge
             Altitude = altitude;
             GeoidalSeparation = geoidalSeparation;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(GPSV2AltitudeDataFrame)} {{ " +
+                $"{nameof(Altitude)} = {Altitude}, " +
+                $"{nameof(GeoidalSeparation)} = {GeoidalSeparation} }}";
+        }
     }
 }

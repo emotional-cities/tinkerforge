@@ -84,5 +84,15 @@ namespace Bonsai.Tinkerforge
             NS = ns;
             EW = ew;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(GPSV2CoordinateDataFrame)} {{ " +
+                $"{nameof(Latitude)} = {Latitude}, " +
+                $"{nameof(NS)} = {NS}, " +
+                $"{nameof(Longitude)} = {Longitude}, " +
+                $"{nameof(EW)} = {EW} }}";
+        }
     }
 }
