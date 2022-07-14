@@ -147,6 +147,17 @@ namespace Bonsai.Tinkerforge
             Humidity = humidity;
             AirPressure = airPressure;
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{nameof(AirQualityDataFrame)} {{ " +
+                $"{nameof(IaqIndex)} = {IaqIndex}, " +
+                $"{nameof(IaqIndexAccuracy)} = {IaqIndexAccuracy}, " +
+                $"{nameof(Temperature)} = {Temperature}, " +
+                $"{nameof(Humidity)} = {Humidity}, " +
+                $"{nameof(AirPressure)} = {AirPressure} }}";
+        }
     }
 
     /// <summary>
