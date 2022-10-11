@@ -2,16 +2,17 @@
 using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Security.Cryptography;
 using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
 {
     /// <summary>
     /// Represents an operator that measures temperature with Pt100 and Pt1000 sensors
-    /// from a PTC Bricklet 2.0.
+    /// from a PTC Bricklet.
     /// </summary>
     [DefaultProperty(nameof(Uid))]
-    public class PTCV2 : Combinator<IPConnection, int>
+    public class PTC : Combinator<IPConnection, int>
     {
         /// <summary>
         /// Gets or sets the bricklet device UID.
@@ -48,13 +49,13 @@ namespace Bonsai.Tinkerforge
         /// Gets or sets a value specifying the wire mode of the sensor.
         /// </summary>
         [Description("Specifies the wire mode of the sensor.")]
-        public PTCV2WireMode WireMode { get; set; } = PTCV2WireMode.WireMode2;
+        public PTCWireMode WireMode { get; set; } = PTCWireMode.WireMode2;
 
         /// <summary>
         /// Gets or sets a value specifying the behavior of the status LED.
         /// </summary>
         [Description("Specifies the behavior of the status LED.")]
-        public PTCV2StatusLedConfig StatusLed { get; set; } = PTCV2StatusLedConfig.ShowStatus;
+        public PTCStatusLedConfig StatusLed { get; set; } = PTCStatusLedConfig.ShowStatus;
 
         /// <inheritdoc/>
         public override string ToString()
@@ -63,14 +64,14 @@ namespace Bonsai.Tinkerforge
         }
 
         /// <summary>
-        /// Measures temperature from a PTC Bricklet 2.0.
+        /// Measures temperature from a PTC Bricklet.
         /// </summary>
         /// <param name="source">
         /// A sequence containing the TCP/IP connection to the Brick Daemon.
         /// </param>
         /// <returns>the 
         /// A sequence of <see cref="int"/> values representing the
-        /// temperature measurements from the PTC Bricklet 2.0.
+        /// temperature measurements from the PTC Bricklet.
         /// in 1/100ths of a degree celsius.
         /// </returns>
         public override IObservable<int> Process(IObservable<IPConnection> source)
@@ -82,18 +83,17 @@ namespace Bonsai.Tinkerforge
 
             return source.SelectStream(connection =>
             {
-                var device = new BrickletPTCV2(Uid, connection);
+                var device = new BrickletPTC(Uid, connection);
                 connection.Connected += (sender, e) =>
                 {
-                    device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetWireMode((byte)WireMode);
-                    device.SetMovingAverageConfiguration(MovingAverageLengthResistance, MovingAverageLengthTemperature);
-                    device.SetTemperatureCallbackConfiguration(Period, false, 'x', 0, 0);
+                    device.SetTemperatureCallbackPeriod(Period);
+                    device.SetTemperatureCallbackThreshold('x', 0, 0);
                 };
 
                 return Observable.Create<int>(observer =>
                 {
-                    BrickletPTCV2.TemperatureEventHandler handler = (sender, temperature) =>
+                    BrickletPTC.TemperatureEventHandler handler = (sender, temperature) =>
                     {
                         observer.OnNext(temperature);
                     };
@@ -101,7 +101,9 @@ namespace Bonsai.Tinkerforge
                     device.TemperatureCallback += handler;
                     return Disposable.Create(() =>
                     {
-                        try { device.SetTemperatureCallbackConfiguration(0, false, 'x', 0, 0); }
+                        try {
+                            device.SetTemperatureCallbackPeriod(0);
+                        }
                         catch (NotConnectedException) { }
                         device.TemperatureCallback -= handler;
                     });
@@ -110,10 +112,10 @@ namespace Bonsai.Tinkerforge
         }
 
         /// <summary>
-        /// Specifies the wire mode configuration of a PTC Bricklet 2.0.
+        /// Specifies the wire mode configuration of a PTC Bricklet
         /// corresponding the wires of the sensor.
         /// </summary>
-        public enum PTCV2WireMode : byte
+        public enum PTCWireMode : byte
         {
             /// <summary>
             /// The bricklet will use a 2-wire sensor.
@@ -132,9 +134,9 @@ namespace Bonsai.Tinkerforge
         }
 
         /// <summary>
-        /// Specifies the behavior of the PTC Bricklet 2.0. status LED.
+        /// Specifies the behavior of the PTC Bricklet status LED.
         /// </summary>
-        public enum PTCV2StatusLedConfig : byte
+        public enum PTCStatusLedConfig : byte
         {
             /// <summary>
             /// The status LED will be permanently OFF.
