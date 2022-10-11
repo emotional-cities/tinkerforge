@@ -171,7 +171,8 @@ namespace Bonsai.Tinkerforge
                 { BrickletSoundPressureLevel.DEVICE_IDENTIFIER, BrickletSoundPressureLevel.DEVICE_DISPLAY_NAME },
                 { BrickletThermocoupleV2.DEVICE_IDENTIFIER, BrickletThermocoupleV2.DEVICE_DISPLAY_NAME },
                 { BrickletAnalogInV3.DEVICE_IDENTIFIER, BrickletAnalogInV3.DEVICE_DISPLAY_NAME },
-                { BrickletAnalogOutV3.DEVICE_IDENTIFIER, BrickletAnalogOutV3.DEVICE_DISPLAY_NAME }
+                { BrickletAnalogOutV3.DEVICE_IDENTIFIER, BrickletAnalogOutV3.DEVICE_DISPLAY_NAME },
+                { BrickletPTCV2.DEVICE_IDENTIFIER, BrickletPTCV2.DEVICE_DISPLAY_NAME }
             };
         }
     }
