@@ -5,11 +5,15 @@
     <Title>Bonsai - Tinkerforge Library</Title>
     <Description>Bonsai Library containing interfaces for data acquisition and control using Tinkerforge devices.</Description>
     <Copyright>Copyright © NeuroGEARS Ltd 2022</Copyright>
-    <PackageProjectUrl>https://github.com/emotional-cities/tinkerforge</PackageProjectUrl>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageProjectUrl>https://emotional-cities.github.io/tinkerforge</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/emotional-cities/tinkerforge.git</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageIconUrl>https://bonsai-rx.org/assets/images/bonsai.png</PackageIconUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>icon.png</PackageIcon>
     <IncludeSymbols Condition="'$(Configuration)'=='Release'">true</IncludeSymbols>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
     <PackageTags>Bonsai Rx Tinkerforge</PackageTags>
     <TargetFramework>net472</TargetFramework>
@@ -19,11 +23,13 @@
 
   <ItemGroup>
     <PackageReference Include="Bonsai.Core" Version="2.6.0" />
+    <PackageReference Include="Microsoft.Spatial" Version="7.12.0" />
     <PackageReference Include="Tinkerforge" Version="2.1.30.1" />
   </ItemGroup>
 	
   <ItemGroup>
-    <Content Include="..\LICENSE" PackagePath="/" />
+    <Content Include="..\..\LICENSE" PackagePath="/" />
+    <Content Include="..\..\icon.png" PackagePath="/" />
   </ItemGroup>
 
 </Project>

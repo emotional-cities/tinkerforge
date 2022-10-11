@@ -7,12 +7,11 @@ using Tinkerforge;
 namespace Bonsai.Tinkerforge
 {
     [Combinator]
-    [DefaultProperty(nameof(Device))]
+    [DefaultProperty(nameof(Uid))]
     [Description("Measures CO2 concentration, in ppm, temperature, and humidity from a CO2 Bricklet 2.0.")]
     public class BrickletCO2V2
     {
-        [Description("Device data including address UID.")]
-        [TypeConverter(typeof(UidConverter))]
+        [Description("The unique bricklet device UID.")]
         public string Uid { get; set; }
 
         [Description("Specifies the period between sample event callbacks. A value of zero disables event reporting.")]
@@ -25,7 +24,7 @@ namespace Bonsai.Tinkerforge
         public int TemperatureOffset { get; set; }
 
         [Description("Specifies the behavior of the status LED.")]
-        public CO2V2StatusLedConfig StatusLed { get; set; } = CO2V2StatusLedConfig.ShowStatus;
+        public StatusLedConfig StatusLed { get; set; } = StatusLedConfig.ShowStatus;
 
         public IObservable<DataFrame> Process(IObservable<IPConnection> source)
         {
@@ -72,7 +71,7 @@ namespace Bonsai.Tinkerforge
             }
         }
 
-        public enum CO2V2StatusLedConfig : byte
+        public enum StatusLedConfig : byte
         {
             Off = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_OFF,
             On = global::Tinkerforge.BrickletCO2V2.STATUS_LED_CONFIG_ON,
