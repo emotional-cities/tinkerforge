@@ -173,6 +173,7 @@ namespace Bonsai.Tinkerforge
                 { BrickletAnalogInV3.DEVICE_IDENTIFIER, BrickletAnalogInV3.DEVICE_DISPLAY_NAME },
                 { BrickletAnalogOutV3.DEVICE_IDENTIFIER, BrickletAnalogOutV3.DEVICE_DISPLAY_NAME },
                 { BrickletIndustrialDual020mAV2.DEVICE_IDENTIFIER, BrickletIndustrialDual020mAV2.DEVICE_DISPLAY_NAME }
+                { BrickletPTCV2.DEVICE_IDENTIFIER, BrickletPTCV2.DEVICE_DISPLAY_NAME }
             };
         }
     }
