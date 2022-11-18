@@ -74,13 +74,10 @@ namespace Bonsai.Tinkerforge
         /// </returns>
         public override IObservable<int> Process(IObservable<IPConnection> source)
         {
-            if (string.IsNullOrEmpty(Uid))
-            {
-                throw new ArgumentException("A device Uid must be specified", "Uid");
-            }
+            var uid = UidHelper.ThrowIfNullOrEmpty(Uid);
 
             return source.SelectStream(
-                connection => new BrickletPTCV2(Uid, connection),
+                connection => new BrickletPTCV2(uid, connection),
                 device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
