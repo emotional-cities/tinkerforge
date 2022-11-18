@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -59,31 +58,26 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletParticulateMatter(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletParticulateMatter(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetPMConcentrationCallbackConfiguration(Period, false);
-                };
 
-                return Observable.Create<ParticulateMatterDataFrame>(observer =>
-                {
-                    BrickletParticulateMatter.PMConcentrationEventHandler handler = (sender, pm10, pm25, pm100) =>
-                    {
-                        observer.OnNext(new ParticulateMatterDataFrame(pm10, pm25, pm100));
-                    };
-
-                    device.PMConcentrationCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetPMConcentrationCallbackConfiguration(0, false); }
-                        catch (NotConnectedException) { }
-                        device.PMConcentrationCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletParticulateMatter.PMConcentrationEventHandler, ParticulateMatterDataFrame>(
+                        onNext => (sender, pm10, pm25, pm100) =>
+                        {
+                            onNext(new ParticulateMatterDataFrame(pm10, pm25, pm100));
+                        },
+                        handler => device.PMConcentrationCallback += handler,
+                        handler => device.PMConcentrationCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetPMConcentrationCallbackConfiguration(0, false); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
     }
 

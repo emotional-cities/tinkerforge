@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -71,26 +70,24 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletAmbientLightV3(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletAmbientLightV3(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetConfiguration((byte)IlluminanceRange, (byte)IntegrationTime);
                     device.SetIlluminanceCallbackConfiguration(Period, false, 'x', 0, 1);
-                };
 
-                return Observable.FromEventPattern<BrickletAmbientLightV3.IlluminanceEventHandler, long>(
-                    handler => device.IlluminanceCallback += handler,
-                    handler => device.IlluminanceCallback -= handler)
-                    .Select(evt => evt.EventArgs)
-                    .Finally(() =>
-                    {
-                        try { device.SetIlluminanceCallbackConfiguration(0, false, 'x', 0, 1); }
-                        catch (NotConnectedException) { } // best effort
-                    });
-            });
+                    return Observable.FromEvent<BrickletAmbientLightV3.IlluminanceEventHandler, long>(
+                        onNext => (sender, illuminance) => onNext(illuminance),
+                        handler => device.IlluminanceCallback += handler,
+                        handler => device.IlluminanceCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetIlluminanceCallbackConfiguration(0, false, 'x', 0, 1); }
+                            catch (NotConnectedException) { } // best effort
+                        });
+                });
         }
     }
 

@@ -111,33 +111,31 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletAnalogOutV3(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletAnalogOutV3(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
-                };
 
-                return Observable.Create<BrickletAnalogOutV3>(observer =>
-                {
-                    observer.OnNext(device);
-                    return Disposable.Create(() =>
+                    return Observable.Create<BrickletAnalogOutV3>(observer =>
                     {
-                        try { device.SetStatusLEDConfig(0); }
-                        catch (NotConnectedException) { }
+                        observer.OnNext(device);
+                        return Disposable.Create(() =>
+                        {
+                            try { device.SetStatusLEDConfig(0); }
+                            catch (NotConnectedException) { }
+                        });
                     });
-                });
-            }).SelectMany(device =>
-            {
-                var voltage = signal;
-                var initialVoltage = InitialVoltage;
-                if (initialVoltage.HasValue)
+                }).SelectMany(device =>
                 {
-                    voltage = Observable.Return(initialVoltage.Value).Concat(signal);
-                }
-                return voltage.Do(device.SetOutputVoltage);
-            });
+                    var voltage = signal;
+                    var initialVoltage = InitialVoltage;
+                    if (initialVoltage.HasValue)
+                    {
+                        voltage = Observable.Return(initialVoltage.Value).Concat(signal);
+                    }
+                    return voltage.Do(device.SetOutputVoltage);
+                });
         }
     }
 

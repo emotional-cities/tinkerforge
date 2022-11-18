@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -81,33 +80,28 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletHumidityV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletHumidityV2(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetHeaterConfiguration((byte)Heater);
                     device.SetMovingAverageConfiguration(MovingAverageLengthHumidity, MovingAverageLengthTemperature);
                     device.SetHumidityCallbackConfiguration(Period, false, 'x', 0, 0);
-                };
 
-                return Observable.Create<int>(observer =>
-                {
-                    BrickletHumidityV2.HumidityEventHandler handler = (sender, humidity) =>
-                    {
-                        observer.OnNext(humidity);
-                    };
-
-                    device.HumidityCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetHumidityCallbackConfiguration(0, false, 'x', 0, 0); }
-                        catch (NotConnectedException) { }
-                        device.HumidityCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletHumidityV2.HumidityEventHandler, int>(
+                        onNext => (sender, humidity) =>
+                        {
+                            onNext(humidity);
+                        },
+                        handler => device.HumidityCallback += handler,
+                        handler => device.HumidityCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetHumidityCallbackConfiguration(0, false, 'x', 0, 0); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
     }
 

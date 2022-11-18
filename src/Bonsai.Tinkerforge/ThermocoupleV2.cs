@@ -80,26 +80,24 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletThermocoupleV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletThermocoupleV2(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetConfiguration((byte)Averaging, (byte)Type, (byte)Filter);
                     device.SetTemperatureCallbackConfiguration(Period, false, 'x', 0, 1);
-                };
 
-                return Observable.FromEventPattern<BrickletThermocoupleV2.TemperatureEventHandler, int>(
-                    handler => device.TemperatureCallback += handler,
-                    handler => device.TemperatureCallback -= handler)
-                    .Select(evt => evt.EventArgs)
-                    .Finally(() =>
-                    {
-                        try { device.SetTemperatureCallbackConfiguration(0, false, 'x', 0, 1); }
-                        catch (NotConnectedException) { } // best effort
+                    return Observable.FromEvent<BrickletThermocoupleV2.TemperatureEventHandler, int>(
+                        onNext => (sender, temperature) => onNext(temperature),
+                        handler => device.TemperatureCallback += handler,
+                        handler => device.TemperatureCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetTemperatureCallbackConfiguration(0, false, 'x', 0, 1); }
+                            catch (NotConnectedException) { } // best effort
+                    });
                 });
-            });
         }
     }
 

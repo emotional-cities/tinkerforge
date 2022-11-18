@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
-using System.Reactive.Disposables;
 using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
@@ -58,31 +57,23 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletAnalogInV3(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletAnalogInV3(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetVoltageCallbackConfiguration(Period, false, 'x', 0, 0);
-                };
 
-                return Observable.Create<int>(observer =>
-                {
-                    BrickletAnalogInV3.VoltageEventHandler handler = (sender, voltage) =>
-                    {
-                        observer.OnNext(voltage);
-                    };
-
-                    device.VoltageCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetVoltageCallbackConfiguration(0, false, 'x', 0, 0); }
-                        catch (NotConnectedException) { }
-                        device.VoltageCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletAnalogInV3.VoltageEventHandler, int>(
+                        onNext => (sender, voltage) => onNext(voltage),
+                        handler => device.VoltageCallback += handler,
+                        handler => device.VoltageCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetVoltageCallbackConfiguration(0, false, 'x', 0, 0); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
     }
 
