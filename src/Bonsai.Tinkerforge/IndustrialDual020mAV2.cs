@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -66,31 +65,26 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletIndustrialDual020mAV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletIndustrialDual020mAV2(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetCurrentCallbackConfiguration(Channel, Period, false, 'x', 0, 0);
-                };
 
-                return Observable.Create<int>(observer =>
-                {
-                    BrickletIndustrialDual020mAV2.CurrentEventHandler handler = (sender, channel, current) =>
-                    {
-                        observer.OnNext(current);
-                    };
-
-                    device.CurrentCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetCurrentCallbackConfiguration(Channel, 0, false, 'x', 0, 0); }
-                        catch (NotConnectedException) { }
-                        device.CurrentCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletIndustrialDual020mAV2.CurrentEventHandler, int>(
+                        onNext => (sender, channel, current) =>
+                        {
+                            onNext(current);
+                        },
+                        handler => device.CurrentCallback += handler,
+                        handler => device.CurrentCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetCurrentCallbackConfiguration(Channel, 0, false, 'x', 0, 0); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
 
         /// <summary>

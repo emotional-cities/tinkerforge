@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -26,21 +25,18 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(device =>
             {
-                return Observable.Create<GPSV2DateTimeDataFrame>(observer =>
-                {
-                    BrickletGPSV2.DateTimeEventHandler handler = (sender, date, time) =>
+                return Observable.FromEvent<BrickletGPSV2.DateTimeEventHandler, GPSV2DateTimeDataFrame>(
+                    onNext => (sender, date, time) =>
                     {
-                        observer.OnNext(new GPSV2DateTimeDataFrame(date, time));
-                    };
-
-                    device.DateTimeCallback += handler;
-                    return Disposable.Create(() =>
+                        onNext(new GPSV2DateTimeDataFrame(date, time));
+                    },
+                    handler => device.DateTimeCallback += handler,
+                    handler => device.DateTimeCallback -= handler)
+                    .Finally(() =>
                     {
                         try { device.SetDateTimeCallbackPeriod(0); }
                         catch (NotConnectedException) { }
-                        device.DateTimeCallback -= handler;
                     });
-                });
             });
         }
     }

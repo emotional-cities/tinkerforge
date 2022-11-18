@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -72,32 +71,27 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream((Func<IPConnection, IObservable<int>>)(connection =>
-            {
-                var device = new BrickletSoundPressureLevel(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletSoundPressureLevel(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
-                    device.SetConfiguration((byte)this.FftSize, (byte)Weighting);
+                    device.SetConfiguration((byte)FftSize, (byte)Weighting);
                     device.SetDecibelCallbackConfiguration(Period, false, 'x', 0, 1);
-                };
 
-                return Observable.Create<int>(observer =>
-                {
-                    BrickletSoundPressureLevel.DecibelEventHandler handler = (BrickletSoundPressureLevel sender, int decibel) =>
-                    {
-                        observer.OnNext(decibel);
-                    };
-
-                    device.DecibelCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetDecibelCallbackConfiguration(0, false, 'x', 0, 1); }
-                        catch (NotConnectedException) { }
-                        device.DecibelCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletSoundPressureLevel.DecibelEventHandler, int>(
+                        onNext => (sender, decibel) =>
+                        {
+                            onNext(decibel);
+                        },
+                        handler => device.DecibelCallback += handler,
+                        handler => device.DecibelCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetDecibelCallbackConfiguration(0, false, 'x', 0, 1); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            }));
         }
     }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -71,33 +70,28 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletCO2V2(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletCO2V2(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetAirPressure(AirPressure);
                     device.SetTemperatureOffset(TemperatureOffset);
                     device.SetAllValuesCallbackConfiguration(Period, false);
-                };
 
-                return Observable.Create<CO2V2DataFrame>(observer =>
-                {
-                    BrickletCO2V2.AllValuesEventHandler handler = (sender, co2Concentration, temperature, humidity) =>
-                    {
-                        observer.OnNext(new CO2V2DataFrame(co2Concentration, temperature, humidity));
-                    };
-
-                    device.AllValuesCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetAllValuesCallbackConfiguration(0, false); }
-                        catch (NotConnectedException) { } // best effort
-                        device.AllValuesCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletCO2V2.AllValuesEventHandler, CO2V2DataFrame>(
+                        onNext => (sender, co2Concentration, temperature, humidity) =>
+                        {
+                            onNext(new CO2V2DataFrame(co2Concentration, temperature, humidity));
+                        },
+                        handler => device.AllValuesCallback += handler,
+                        handler => device.AllValuesCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetAllValuesCallbackConfiguration(0, false); }
+                            catch (NotConnectedException) { } // best effort
+                        });
                 });
-            });
         }
     }
 

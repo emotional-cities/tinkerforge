@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -81,33 +80,28 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletIndustrialPTC(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletIndustrialPTC(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetWireMode((byte)WireMode);
                     device.SetMovingAverageConfiguration(MovingAverageLengthResistance, MovingAverageLengthTemperature);
                     device.SetTemperatureCallbackConfiguration(Period, false, 'x', 0, 0);
-                };
 
-                return Observable.Create<int>(observer =>
-                {
-                    BrickletIndustrialPTC.TemperatureEventHandler handler = (sender, temperature) =>
-                    {
-                        observer.OnNext(temperature);
-                    };
-
-                    device.TemperatureCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetTemperatureCallbackConfiguration(0, false, 'x', 0, 0); }
-                        catch (NotConnectedException) { }
-                        device.TemperatureCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletIndustrialPTC.TemperatureEventHandler, int>(
+                        onNext => (sender, temperature) =>
+                        {
+                            onNext(temperature);
+                        },
+                        handler => device.TemperatureCallback += handler,
+                        handler => device.TemperatureCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetTemperatureCallbackConfiguration(0, false, 'x', 0, 0); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
     }
 

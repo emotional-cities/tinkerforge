@@ -24,5 +24,20 @@ namespace Bonsai.Tinkerforge
                     source.SubscribeSafe(connectionObserver));
             });
         }
+
+        public static IObservable<TResult> SelectStream<TDevice, TResult>(
+            this IObservable<IPConnection> source,
+            Func<IPConnection, TDevice> deviceFactory,
+            Func<TDevice, IObservable<TResult>> selector)
+        {
+            return source.SelectStream(connection =>
+            {
+                var device = deviceFactory(connection);
+                return Observable.FromEventPattern<IPConnection.ConnectedEventHandler, short>(
+                    handler => connection.Connected += handler,
+                    handler => connection.Connected -= handler)
+                    .SelectMany(connected => selector(device));
+            });
+        }
     }
 }

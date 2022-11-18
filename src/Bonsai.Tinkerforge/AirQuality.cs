@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -73,37 +72,33 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletAirQuality(Uid, connection);
-                connection.Connected += (sender, e) => {
+            return source.SelectStream(
+                connection => new BrickletAirQuality(Uid, connection),
+                device =>
+                {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetTemperatureOffset(TemperatureOffset);
                     device.SetBackgroundCalibrationDuration((byte)BackgroundCalibrationDuration);
                     device.SetAllValuesCallbackConfiguration(Period, false);
-                };
 
-                return Observable.Create<AirQualityDataFrame>(observer =>
-                {
-                    BrickletAirQuality.AllValuesEventHandler handler = (sender, iaqIndex, iaqAccuracy, temperature, humidity, airPressure) =>
-                    {
-                        observer.OnNext(new AirQualityDataFrame(
-                            iaqIndex,
-                            (AirQualityAccuracy)iaqAccuracy,
-                            temperature,
-                            humidity,
-                            airPressure));
-                    };
-
-                    device.AllValuesCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try { device.SetAllValuesCallbackConfiguration(0, false); }
-                        catch (NotConnectedException) { }
-                        device.AllValuesCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletAirQuality.AllValuesEventHandler, AirQualityDataFrame>(
+                        onNext => (sender, iaqIndex, iaqAccuracy, temperature, humidity, airPressure) =>
+                        {
+                            onNext(new AirQualityDataFrame(
+                                iaqIndex,
+                                (AirQualityAccuracy)iaqAccuracy,
+                                temperature,
+                                humidity,
+                                airPressure));
+                        },
+                        handler => device.AllValuesCallback += handler,
+                        handler => device.AllValuesCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetAllValuesCallbackConfiguration(0, false); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
     }
 

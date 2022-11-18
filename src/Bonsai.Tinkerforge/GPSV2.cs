@@ -87,10 +87,9 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletGPSV2(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletGPSV2(Uid, connection),
+                device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
                     device.SetSBASConfig((byte)SBAS);
@@ -98,18 +97,17 @@ namespace Bonsai.Tinkerforge
                     device.SetAltitudeCallbackPeriod(AltitudePeriod);
                     device.SetCoordinatesCallbackPeriod(CoordinatePeriod);
                     device.SetStatusCallbackPeriod(StatusPeriod);
-                };
 
-                return Observable.Create<BrickletGPSV2>(observer =>
-                {
-                    observer.OnNext(device);
-                    return Disposable.Create(() =>
+                    return Observable.Create<BrickletGPSV2>(observer =>
                     {
-                        try { device.SetStatusLEDConfig(0); }
-                        catch (NotConnectedException) { }
+                        observer.OnNext(device);
+                        return Disposable.Create(() =>
+                        {
+                            try { device.SetStatusLEDConfig(0); }
+                            catch (NotConnectedException) { }
+                        });
                     });
                 });
-            });
         }
     }
 

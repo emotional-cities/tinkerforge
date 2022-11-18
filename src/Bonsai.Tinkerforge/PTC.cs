@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Security.Cryptography;
 using Tinkerforge;
 
 namespace Bonsai.Tinkerforge
@@ -81,34 +79,27 @@ namespace Bonsai.Tinkerforge
                 throw new ArgumentException("A device Uid must be specified", "Uid");
             }
 
-            return source.SelectStream(connection =>
-            {
-                var device = new BrickletPTC(Uid, connection);
-                connection.Connected += (sender, e) =>
+            return source.SelectStream(
+                connection => new BrickletPTC(Uid, connection),
+                device =>
                 {
                     device.SetWireMode((byte)WireMode);
                     device.SetTemperatureCallbackPeriod(Period);
                     device.SetTemperatureCallbackThreshold('x', 0, 0);
-                };
 
-                return Observable.Create<int>(observer =>
-                {
-                    BrickletPTC.TemperatureEventHandler handler = (sender, temperature) =>
-                    {
-                        observer.OnNext(temperature);
-                    };
-
-                    device.TemperatureCallback += handler;
-                    return Disposable.Create(() =>
-                    {
-                        try {
-                            device.SetTemperatureCallbackPeriod(0);
-                        }
-                        catch (NotConnectedException) { }
-                        device.TemperatureCallback -= handler;
-                    });
+                    return Observable.FromEvent<BrickletPTC.TemperatureEventHandler, int>(
+                        onNext => (sender, temperature) =>
+                        {
+                            onNext(temperature);
+                        },
+                        handler => device.TemperatureCallback += handler,
+                        handler => device.TemperatureCallback -= handler)
+                        .Finally(() =>
+                        {
+                            try { device.SetTemperatureCallbackPeriod(0); }
+                            catch (NotConnectedException) { }
+                        });
                 });
-            });
         }
 
         /// <summary>

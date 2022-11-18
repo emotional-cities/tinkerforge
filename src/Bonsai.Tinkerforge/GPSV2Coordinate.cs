@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
@@ -26,21 +25,18 @@ namespace Bonsai.Tinkerforge
         {
             return source.SelectStream(device =>
             {
-                return Observable.Create<GPSV2CoordinateDataFrame>(observer =>
-                {
-                    BrickletGPSV2.CoordinatesEventHandler handler = (sender, latitude, ns, longitude, ew) =>
+                return Observable.FromEvent<BrickletGPSV2.CoordinatesEventHandler, GPSV2CoordinateDataFrame>(
+                    onNext => (sender, latitude, ns, longitude, ew) =>
                     {
-                        observer.OnNext(new GPSV2CoordinateDataFrame(latitude, longitude, ns, ew));
-                    };
-
-                    device.CoordinatesCallback += handler;
-                    return Disposable.Create(() =>
+                        onNext(new GPSV2CoordinateDataFrame(latitude, longitude, ns, ew));
+                    },
+                    handler => device.CoordinatesCallback += handler,
+                    handler => device.CoordinatesCallback -= handler)
+                    .Finally(() =>
                     {
                         try { device.SetCoordinatesCallbackPeriod(0); }
                         catch (NotConnectedException) { }
-                        device.CoordinatesCallback -= handler;
                     });
-                });
             });
         }
     }
