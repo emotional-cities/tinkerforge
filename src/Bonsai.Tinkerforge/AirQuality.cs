@@ -67,13 +67,10 @@ namespace Bonsai.Tinkerforge
         /// </returns>
         public override IObservable<AirQualityDataFrame> Process(IObservable<IPConnection> source)
         {
-            if (string.IsNullOrEmpty(Uid))
-            {
-                throw new ArgumentException("A device Uid must be specified", "Uid");
-            }
+            var uid = UidHelper.ThrowIfNullOrEmpty(Uid);
 
             return source.SelectStream(
-                connection => new BrickletAirQuality(Uid, connection),
+                connection => new BrickletAirQuality(uid, connection),
                 device =>
                 {
                     device.SetStatusLEDConfig((byte)StatusLed);
