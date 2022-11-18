@@ -104,7 +104,9 @@ namespace Bonsai.Tinkerforge
 
                 // Return the list of connected devices, filter by those that match the context instance (e.g. if context is AirQuality, only return AirQualityDevices)
                 return new StandardValuesCollection(devices.Values
-                    .Where(dev => TinkerforgeDeviceLookup.Defaults[dev.DeviceIdentifier] == deviceDisplayName)
+                    .Where(dev =>
+                        TinkerforgeDeviceLookup.Defaults.TryGetValue(dev.DeviceIdentifier, out string name) &&
+                        name == deviceDisplayName)
                     .ToList()
                 );
             }
@@ -149,7 +151,11 @@ namespace Bonsai.Tinkerforge
 
             public override string ToString()
             {
-                return $"{TinkerforgeDeviceLookup.Defaults[DeviceIdentifier]}:{Uid}";
+                if (TinkerforgeDeviceLookup.Defaults.TryGetValue(DeviceIdentifier, out string name))
+                {
+                    return $"{name}:{Uid}";
+                }
+                else return $"{Uid}";
             }
         }
 
