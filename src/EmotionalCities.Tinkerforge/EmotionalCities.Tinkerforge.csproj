@@ -16,14 +16,14 @@
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageOutputPath>..\bin\$(Configuration)</PackageOutputPath>
-    <PackageTags>Bonsai Rx Tinkerforge</PackageTags>
-    <TargetFramework>net472</TargetFramework>
+    <PackageTags>Bonsai Rx Emotional Cities Tinkerforge</PackageTags>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <Features>strict</Features>
     <Version>0.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bonsai.Core" Version="2.6.0" />
+    <PackageReference Include="Bonsai.Core" Version="2.7.0" />
     <PackageReference Include="Microsoft.Spatial" Version="7.12.0" />
     <PackageReference Include="Tinkerforge" Version="2.1.30.1" />
   </ItemGroup>
