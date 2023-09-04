@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
+using Bonsai;
 using Tinkerforge;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     /// <summary>
     /// Represents an operator that measures CO2 concentration, temperature and humidity from a CO2 Bricklet 2.0.

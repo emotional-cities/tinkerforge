@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using Tinkerforge;
+using Bonsai;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     /// <summary>
     /// Represents an operator that writes an analog output voltage signal to an Analog Out Bricklet 3.0.

@@ -1,6 +1,6 @@
-# **Bonsai - Tinkerforge** Documentation
+# **Emotional Cities - Tinkerforge** Documentation
 
-Bonsai.Tinkerforge is a [Bonsai](https://bonsai-rx.org/) interface for [Tinkerforge](https://www.tinkerforge.com/) hardware allowing data acquisition and control of Bricks and Bricklet devices.
+EmotionalCities.Tinkerforge is a [Bonsai](https://bonsai-rx.org/) interface for [Tinkerforge](https://www.tinkerforge.com/) hardware allowing data acquisition and control of Bricks and Bricklet devices.
 
 > [!Warning]
 > These docs are under active development, feel free to contribute by either [raising an issue](https://github.com/emotional-cities/tinkerforge/issues) or following the links to **Improve this Doc**.

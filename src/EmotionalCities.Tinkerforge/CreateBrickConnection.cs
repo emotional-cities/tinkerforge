@@ -2,9 +2,10 @@
 using System.ComponentModel;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using Bonsai;
 using Tinkerforge;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     /// <summary>
     /// Represents an operator that creates a TCP/IP connection to the Brick Daemon.

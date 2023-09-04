@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     [AttributeUsage(AttributeTargets.Property)]
     internal sealed class DeviceTypeAttribute : Attribute
