@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <Authors>NeuroGEARS</Authors>
-    <Title>Bonsai - Tinkerforge Library</Title>
-    <Description>Bonsai Library containing interfaces for data acquisition and control using Tinkerforge devices.</Description>
+    <Title>Emotional Cities - Tinkerforge Library</Title>
+    <Description>Bonsai Library containing interfaces for data acquisition and control of Tinkerforge devices.</Description>
     <Copyright>Copyright © NeuroGEARS Ltd 2022</Copyright>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageProjectUrl>https://emotional-cities.github.io/tinkerforge</PackageProjectUrl>
@@ -18,7 +18,7 @@
     <PackageTags>Bonsai Rx Tinkerforge</PackageTags>
     <TargetFramework>net472</TargetFramework>
     <Features>strict</Features>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

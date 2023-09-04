@@ -4,7 +4,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using Tinkerforge;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     static class ObservableExtensions
     {

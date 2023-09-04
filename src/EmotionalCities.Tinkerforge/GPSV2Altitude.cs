@@ -1,9 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
+using Bonsai;
 using Tinkerforge;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     /// <summary>
     /// Represents an operator that generates an altitude data stream from a GPS Bricklet 2.0.

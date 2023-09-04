@@ -7,8 +7,9 @@ using Bonsai.Expressions;
 using System.Threading;
 using Tinkerforge;
 using System.Reflection;
+using Bonsai;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     internal class UidConverter : StringConverter
     {

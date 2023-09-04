@@ -2,9 +2,10 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
+using Bonsai;
 using Microsoft.Spatial;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     /// <summary>
     /// Represents an operator that retrieves a stream of geography points,

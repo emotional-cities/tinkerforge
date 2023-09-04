@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Bonsai.Tinkerforge
+namespace EmotionalCities.Tinkerforge
 {
     internal static class UidHelper
     {
